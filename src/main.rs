@@ -12,7 +12,7 @@ fn panic(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-const BLINK_GPIO: gpio_num_t = gpio_num_t_GPIO_NUM_2;
+const BLINK_GPIO: gpio_num_t = gpio_num_t_GPIO_NUM_5;
 const UART_NUM: uart_port_t = uart_port_t_UART_NUM_1;
 const ECHO_TEST_TXD: i32 = gpio_num_t_GPIO_NUM_17 as i32;
 const ECHO_TEST_RXD: i32 = gpio_num_t_GPIO_NUM_16 as i32;
