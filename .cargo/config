@@ -37,7 +37,7 @@ rustflags = [
   "-C", "link-arg=-Lbuild/esp-tls",  "-C", "link-arg=-lesp-tls",
   "-C", "link-arg=-Lbuild/esp32",  "-C", "link-arg=-lesp32",
 
-  "-C", "link-arg=-Lesp-idf/components/esp32/ld",
+  "-C", "link-arg=-L../esp-idf/components/esp32/ld",
   "-C", "link-arg=-Tesp32_out.ld",
   "-C", "link-arg=-Tesp32.discard-rtti.ld",
   "-C", "link-arg=-Tbuild/esp32/esp32.project.ld",
@@ -54,7 +54,7 @@ rustflags = [
   "-C", "link-arg=-Lbuild/esp_local_ctrl", "-C", "link-arg=-lesp_local_ctrl",
   "-C", "link-arg=-Lbuild/esp_ringbuf", "-C", "link-arg=-lesp_ringbuf",
   "-C", "link-arg=-Lbuild/esp_rom", "-C", "link-arg=-lesp_rom",
-  "-C", "link-arg=-Lesp-idf/components/esp_rom/esp32/ld",
+  "-C", "link-arg=-L../esp-idf/components/esp_rom/esp32/ld",
   "-C", "link-arg=-Tesp32.rom.ld",
   "-C", "link-arg=-Tesp32.rom.libgcc.ld",
   "-C", "link-arg=-Tesp32.rom.syscalls.ld",
@@ -64,7 +64,7 @@ rustflags = [
   "-C", "link-arg=-Lbuild/esp_websocket_client", "-C", "link-arg=-lesp_websocket_client",
   "-C", "link-arg=-Lbuild/esp_wifi", "-C", "link-arg=-lesp_wifi",
 
-  "-C", "link-arg=-Lesp-idf/components/esp_wifi/lib_esp32",
+  "-C", "link-arg=-L../esp-idf/components/esp_wifi/lib_esp32",
   "-C", "link-arg=-lcore", "-C", "link-arg=-lrtc", "-C", "link-arg=-lnet80211",
   "-C", "link-arg=-lpp", "-C", "link-arg=-lsmartconfig",
   "-C", "link-arg=-lcoexist", "-C", "link-arg=-lespnow",
@@ -126,7 +126,7 @@ rustflags = [
   "-C", "link-arg=-Lbuild/wifi_provisioning", "-C", "link-arg=-lwifi_provisioning",
   "-C", "link-arg=-Lbuild/wpa_supplicant", "-C", "link-arg=-lwpa_supplicant",
 
-  "-C", "link-arg=esp-idf/components/xtensa/esp32/libhal.a",
+  "-C", "link-arg=../esp-idf/components/xtensa/esp32/libhal.a",
 
   "-C", "link-arg=-lgcc",
   "-C", "link-arg=-lstdc++",

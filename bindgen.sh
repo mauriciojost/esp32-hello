@@ -2,15 +2,17 @@
 
 set -e
 
-source ../setenv.sh
+source setenv.sh
+
+cd esp32-sys
 
 COMPS=$IDF_PATH/components
-SYSROOT=$HOME/xtensa-esp32-elf/xtensa-esp32-elf/sysroot
+SYSROOT=$IDF_TOOLS_PATH/tools/xtensa-esp32-elf/xtensa-esp32-elf/
 
 BINDGEN=bindgen
 CLANG_FLAGS="\
 	--sysroot=$SYSROOT \
-    -I$(pwd)/build/include \
+    -I../build/include \
 	-D__bindgen \
 	-target xtensa \
 	-x c"
@@ -24,16 +26,11 @@ for INC in `ls -d $COMPS/*/include`; do
 	CLANG_FLAGS+=" -I$INC"
 done
 
-CLANG_FLAGS+=" -I../build/include"
-
-#echo $CLANG_FLAGS
-
 function generate_bindings ()
 {
     declare -r crate=$1
 
     cd "$crate"
-    #source ./bindings.env
 
 	LIBCLANG_PATH="$LIBCLANG_PATH" \
 	"$BINDGEN" \
@@ -44,7 +41,7 @@ function generate_bindings ()
 		src/bindings.h \
 		-- $CLANG_FLAGS
 
-	rustup run nightly rustfmt src/bindings.rs
+	rustfmt src/bindings.rs
 }
 
 generate_bindings $@

@@ -90,12 +90,12 @@ impl<T> __IncompleteArrayField<T> {
         __IncompleteArrayField(::core::marker::PhantomData, [])
     }
     #[inline]
-    pub unsafe fn as_ptr(&self) -> *const T {
-        ::core::mem::transmute(self)
+    pub fn as_ptr(&self) -> *const T {
+        self as *const _ as *const T
     }
     #[inline]
-    pub unsafe fn as_mut_ptr(&mut self) -> *mut T {
-        ::core::mem::transmute(self)
+    pub fn as_mut_ptr(&mut self) -> *mut T {
+        self as *mut _ as *mut T
     }
     #[inline]
     pub unsafe fn as_slice(&self, len: usize) -> &[T] {
@@ -109,12 +109,6 @@ impl<T> __IncompleteArrayField<T> {
 impl<T> ::core::fmt::Debug for __IncompleteArrayField<T> {
     fn fmt(&self, fmt: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
         fmt.write_str("__IncompleteArrayField")
-    }
-}
-impl<T> ::core::clone::Clone for __IncompleteArrayField<T> {
-    #[inline]
-    fn clone(&self) -> Self {
-        Self::new()
     }
 }
 pub const SOC_UART_NUM: u32 = 3;
@@ -2311,8 +2305,8 @@ pub const CONFIG_SDK_TOOLPREFIX: &'static [u8; 18usize] = b"xtensa-esp32-elf-\0"
 pub const CONFIG_SDK_PYTHON: &'static [u8; 7usize] = b"python\0";
 pub const CONFIG_SDK_MAKE_WARN_UNDEFINED_VARIABLES: u32 = 1;
 pub const CONFIG_APP_COMPILE_TIME_DATE: u32 = 1;
-pub const CONFIG_BOOTLOADER_LOG_LEVEL_INFO: u32 = 1;
-pub const CONFIG_BOOTLOADER_LOG_LEVEL: u32 = 3;
+pub const CONFIG_BOOTLOADER_LOG_LEVEL_VERBOSE: u32 = 1;
+pub const CONFIG_BOOTLOADER_LOG_LEVEL: u32 = 5;
 pub const CONFIG_BOOTLOADER_VDDSDIO_BOOST_1_9V: u32 = 1;
 pub const CONFIG_BOOTLOADER_WDT_ENABLE: u32 = 1;
 pub const CONFIG_BOOTLOADER_WDT_TIME_MS: u32 = 9000;
@@ -2626,8 +2620,8 @@ pub const CONFIG_INT_WDT_CHECK_CPU1: u32 = 1;
 pub const CONFIG_INT_WDT_TIMEOUT_MS: u32 = 300;
 pub const CONFIG_IPC_TASK_STACK_SIZE: u32 = 1024;
 pub const CONFIG_IP_LOST_TIMER_INTERVAL: u32 = 120;
-pub const CONFIG_LOG_BOOTLOADER_LEVEL: u32 = 3;
-pub const CONFIG_LOG_BOOTLOADER_LEVEL_INFO: u32 = 1;
+pub const CONFIG_LOG_BOOTLOADER_LEVEL: u32 = 5;
+pub const CONFIG_LOG_BOOTLOADER_LEVEL_VERBOSE: u32 = 1;
 pub const CONFIG_MAIN_TASK_STACK_SIZE: u32 = 3584;
 pub const CONFIG_MAKE_WARN_UNDEFINED_VARIABLES: u32 = 1;
 pub const CONFIG_MB_CONTROLLER_NOTIFY_QUEUE_SIZE: u32 = 20;
@@ -10732,6 +10726,7 @@ extern "C" {
 extern "C" {
     pub static mut UART2: uart_dev_t;
 }
+pub type size_t = ::std::os::raw::c_uint;
 pub type wchar_t = ::std::os::raw::c_uchar;
 #[repr(C)]
 #[repr(align(8))]
@@ -10797,7 +10792,7 @@ pub union _mbstate_t__bindgen_ty_1 {
     _bindgen_union_align: u32,
 }
 pub type _flock_t = _LOCK_RECURSIVE_T;
-pub type _iconv_t = *mut ::std::os::raw::c_void;
+pub type _iconv_t = *mut ::core::ffi::c_void;
 pub type __ULong = ::std::os::raw::c_ulong;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -10825,8 +10820,8 @@ pub struct __tm {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _on_exit_args {
-    pub _fnargs: [*mut ::std::os::raw::c_void; 32usize],
-    pub _dso_handle: [*mut ::std::os::raw::c_void; 32usize],
+    pub _fnargs: [*mut ::core::ffi::c_void; 32usize],
+    pub _dso_handle: [*mut ::core::ffi::c_void; 32usize],
     pub _fntypes: __ULong,
     pub _is_cxa: __ULong,
 }
@@ -10870,11 +10865,11 @@ pub struct __sFILE {
     pub _bf: __sbuf,
     pub _lbfsize: ::std::os::raw::c_int,
     pub _data: *mut _reent,
-    pub _cookie: *mut ::std::os::raw::c_void,
+    pub _cookie: *mut ::core::ffi::c_void,
     pub _read: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut _reent,
-            arg2: *mut ::std::os::raw::c_void,
+            arg2: *mut ::core::ffi::c_void,
             arg3: *mut ::std::os::raw::c_char,
             arg4: ::std::os::raw::c_int,
         ) -> ::std::os::raw::c_int,
@@ -10882,7 +10877,7 @@ pub struct __sFILE {
     pub _write: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut _reent,
-            arg2: *mut ::std::os::raw::c_void,
+            arg2: *mut ::core::ffi::c_void,
             arg3: *const ::std::os::raw::c_char,
             arg4: ::std::os::raw::c_int,
         ) -> ::std::os::raw::c_int,
@@ -10890,7 +10885,7 @@ pub struct __sFILE {
     pub _seek: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut _reent,
-            arg2: *mut ::std::os::raw::c_void,
+            arg2: *mut ::core::ffi::c_void,
             arg3: _fpos_t,
             arg4: ::std::os::raw::c_int,
         ) -> _fpos_t,
@@ -10898,7 +10893,7 @@ pub struct __sFILE {
     pub _close: ::core::option::Option<
         unsafe extern "C" fn(
             arg1: *mut _reent,
-            arg2: *mut ::std::os::raw::c_void,
+            arg2: *mut ::core::ffi::c_void,
         ) -> ::std::os::raw::c_int,
     >,
     pub _ub: __sbuf,
@@ -11031,6 +11026,7 @@ pub type uid_t = __uid_t;
 pub type gid_t = __gid_t;
 pub type pid_t = ::std::os::raw::c_int;
 pub type key_t = ::std::os::raw::c_long;
+pub type ssize_t = _ssize_t;
 pub type mode_t = ::std::os::raw::c_uint;
 pub type nlink_t = ::std::os::raw::c_ushort;
 pub type fd_mask = ::std::os::raw::c_long;
@@ -11056,7 +11052,7 @@ pub type pthread_t = __uint32_t;
 #[derive(Debug, Copy, Clone)]
 pub struct pthread_attr_t {
     pub is_initialized: ::std::os::raw::c_int,
-    pub stackaddr: *mut ::std::os::raw::c_void,
+    pub stackaddr: *mut ::core::ffi::c_void,
     pub stacksize: ::std::os::raw::c_int,
     pub contentionscope: ::std::os::raw::c_int,
     pub inheritsched: ::std::os::raw::c_int,
@@ -11120,7 +11116,7 @@ extern "C" {
         arg1: *mut FILE,
         arg2: *mut ::std::os::raw::c_char,
         arg3: ::std::os::raw::c_int,
-        arg4: usize,
+        arg4: size_t,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -11209,19 +11205,19 @@ extern "C" {
 }
 extern "C" {
     pub fn fread(
-        arg1: *mut ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg1: *mut ::core::ffi::c_void,
+        _size: ::std::os::raw::c_uint,
+        _n: ::std::os::raw::c_uint,
         arg2: *mut FILE,
-    ) -> usize;
+    ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn fwrite(
-        arg1: *const ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg1: *const ::core::ffi::c_void,
+        _size: ::std::os::raw::c_uint,
+        _n: ::std::os::raw::c_uint,
         arg2: *mut FILE,
-    ) -> usize;
+    ) -> ::std::os::raw::c_uint;
 }
 extern "C" {
     pub fn fgetpos(arg1: *mut FILE, arg2: *mut fpos_t) -> ::std::os::raw::c_int;
@@ -11296,7 +11292,7 @@ extern "C" {
 extern "C" {
     pub fn asniprintf(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: *mut usize,
+        arg2: *mut size_t,
         arg3: *const ::std::os::raw::c_char,
         ...
     ) -> *mut ::std::os::raw::c_char;
@@ -11304,7 +11300,7 @@ extern "C" {
 extern "C" {
     pub fn asnprintf(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: *mut usize,
+        arg2: *mut size_t,
         arg3: *const ::std::os::raw::c_char,
         ...
     ) -> *mut ::std::os::raw::c_char;
@@ -11368,7 +11364,7 @@ extern "C" {
 extern "C" {
     pub fn sniprintf(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: usize,
+        arg2: size_t,
         arg3: *const ::std::os::raw::c_char,
         ...
     ) -> ::std::os::raw::c_int;
@@ -11383,7 +11379,7 @@ extern "C" {
 extern "C" {
     pub fn vasniprintf(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: *mut usize,
+        arg2: *mut size_t,
         arg3: *const ::std::os::raw::c_char,
         arg4: __gnuc_va_list,
     ) -> *mut ::std::os::raw::c_char;
@@ -11391,7 +11387,7 @@ extern "C" {
 extern "C" {
     pub fn vasnprintf(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: *mut usize,
+        arg2: *mut size_t,
         arg3: *const ::std::os::raw::c_char,
         arg4: __gnuc_va_list,
     ) -> *mut ::std::os::raw::c_char;
@@ -11466,7 +11462,7 @@ extern "C" {
 extern "C" {
     pub fn vsniprintf(
         arg1: *mut ::std::os::raw::c_char,
-        arg2: usize,
+        arg2: size_t,
         arg3: *const ::std::os::raw::c_char,
         arg4: __gnuc_va_list,
     ) -> ::std::os::raw::c_int;
@@ -11547,13 +11543,13 @@ extern "C" {
 }
 extern "C" {
     pub fn fmemopen(
-        arg1: *mut ::std::os::raw::c_void,
-        arg2: usize,
+        arg1: *mut ::core::ffi::c_void,
+        arg2: size_t,
         arg3: *const ::std::os::raw::c_char,
     ) -> *mut FILE;
 }
 extern "C" {
-    pub fn open_memstream(arg1: *mut *mut ::std::os::raw::c_char, arg2: *mut usize) -> *mut FILE;
+    pub fn open_memstream(arg1: *mut *mut ::std::os::raw::c_char, arg2: *mut size_t) -> *mut FILE;
 }
 extern "C" {
     pub fn renameat(
@@ -11582,7 +11578,7 @@ extern "C" {
     pub fn _asniprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: *mut usize,
+        arg3: *mut size_t,
         arg4: *const ::std::os::raw::c_char,
         ...
     ) -> *mut ::std::os::raw::c_char;
@@ -11591,7 +11587,7 @@ extern "C" {
     pub fn _asnprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: *mut usize,
+        arg3: *mut size_t,
         arg4: *const ::std::os::raw::c_char,
         ...
     ) -> *mut ::std::os::raw::c_char;
@@ -11691,8 +11687,8 @@ extern "C" {
 extern "C" {
     pub fn _fmemopen_r(
         arg1: *mut _reent,
-        arg2: *mut ::std::os::raw::c_void,
-        arg3: usize,
+        arg2: *mut ::core::ffi::c_void,
+        arg3: size_t,
         arg4: *const ::std::os::raw::c_char,
     ) -> *mut FILE;
 }
@@ -11753,20 +11749,20 @@ extern "C" {
 extern "C" {
     pub fn _fread_r(
         arg1: *mut _reent,
-        arg2: *mut ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg2: *mut ::core::ffi::c_void,
+        _size: size_t,
+        _n: size_t,
         arg3: *mut FILE,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
     pub fn _fread_unlocked_r(
         arg1: *mut _reent,
-        arg2: *mut ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg2: *mut ::core::ffi::c_void,
+        _size: size_t,
+        _n: size_t,
         arg3: *mut FILE,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
     pub fn _fscanf_r(
@@ -11804,20 +11800,20 @@ extern "C" {
 extern "C" {
     pub fn _fwrite_r(
         arg1: *mut _reent,
-        arg2: *const ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg2: *const ::core::ffi::c_void,
+        _size: size_t,
+        _n: size_t,
         arg3: *mut FILE,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
     pub fn _fwrite_unlocked_r(
         arg1: *mut _reent,
-        arg2: *const ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg2: *const ::core::ffi::c_void,
+        _size: size_t,
+        _n: size_t,
         arg3: *mut FILE,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
     pub fn _getc_r(arg1: *mut _reent, arg2: *mut FILE) -> ::std::os::raw::c_int;
@@ -11855,7 +11851,7 @@ extern "C" {
     pub fn _open_memstream_r(
         arg1: *mut _reent,
         arg2: *mut *mut ::std::os::raw::c_char,
-        arg3: *mut usize,
+        arg3: *mut size_t,
     ) -> *mut FILE;
 }
 extern "C" {
@@ -11935,7 +11931,7 @@ extern "C" {
     pub fn _sniprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: usize,
+        arg3: size_t,
         arg4: *const ::std::os::raw::c_char,
         ...
     ) -> ::std::os::raw::c_int;
@@ -11944,7 +11940,7 @@ extern "C" {
     pub fn _snprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: usize,
+        arg3: size_t,
         arg4: *const ::std::os::raw::c_char,
         ...
     ) -> ::std::os::raw::c_int;
@@ -12000,7 +11996,7 @@ extern "C" {
     pub fn _vasniprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: *mut usize,
+        arg3: *mut size_t,
         arg4: *const ::std::os::raw::c_char,
         arg5: __gnuc_va_list,
     ) -> *mut ::std::os::raw::c_char;
@@ -12009,7 +12005,7 @@ extern "C" {
     pub fn _vasnprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: *mut usize,
+        arg3: *mut size_t,
         arg4: *const ::std::os::raw::c_char,
         arg5: __gnuc_va_list,
     ) -> *mut ::std::os::raw::c_char;
@@ -12118,7 +12114,7 @@ extern "C" {
     pub fn _vsniprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: usize,
+        arg3: size_t,
         arg4: *const ::std::os::raw::c_char,
         arg5: __gnuc_va_list,
     ) -> ::std::os::raw::c_int;
@@ -12127,7 +12123,7 @@ extern "C" {
     pub fn _vsnprintf_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
-        arg3: usize,
+        arg3: size_t,
         arg4: *const ::std::os::raw::c_char,
         arg5: __gnuc_va_list,
     ) -> ::std::os::raw::c_int;
@@ -12154,17 +12150,17 @@ extern "C" {
 extern "C" {
     pub fn __getdelim(
         arg1: *mut *mut ::std::os::raw::c_char,
-        arg2: *mut usize,
+        arg2: *mut size_t,
         arg3: ::std::os::raw::c_int,
         arg4: *mut FILE,
-    ) -> isize;
+    ) -> ssize_t;
 }
 extern "C" {
     pub fn __getline(
         arg1: *mut *mut ::std::os::raw::c_char,
-        arg2: *mut usize,
+        arg2: *mut size_t,
         arg3: *mut FILE,
-    ) -> isize;
+    ) -> ssize_t;
 }
 extern "C" {
     pub fn clearerr_unlocked(arg1: *mut FILE);
@@ -12189,19 +12185,19 @@ extern "C" {
 }
 extern "C" {
     pub fn fread_unlocked(
-        arg1: *mut ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg1: *mut ::core::ffi::c_void,
+        _size: size_t,
+        _n: size_t,
         arg2: *mut FILE,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
     pub fn fwrite_unlocked(
-        arg1: *const ::std::os::raw::c_void,
-        _size: usize,
-        _n: usize,
+        arg1: *const ::core::ffi::c_void,
+        _size: size_t,
+        _n: size_t,
         arg2: *mut FILE,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
     pub fn __srget_r(arg1: *mut _reent, arg2: *mut FILE) -> ::std::os::raw::c_int;
@@ -12215,86 +12211,86 @@ extern "C" {
 }
 extern "C" {
     pub fn funopen(
-        __cookie: *const ::std::os::raw::c_void,
+        __cookie: *const ::core::ffi::c_void,
         __readfn: ::core::option::Option<
             unsafe extern "C" fn(
-                __cookie: *mut ::std::os::raw::c_void,
+                __cookie: *mut ::core::ffi::c_void,
                 __buf: *mut ::std::os::raw::c_char,
                 __n: ::std::os::raw::c_int,
             ) -> ::std::os::raw::c_int,
         >,
         __writefn: ::core::option::Option<
             unsafe extern "C" fn(
-                __cookie: *mut ::std::os::raw::c_void,
+                __cookie: *mut ::core::ffi::c_void,
                 __buf: *const ::std::os::raw::c_char,
                 __n: ::std::os::raw::c_int,
             ) -> ::std::os::raw::c_int,
         >,
         __seekfn: ::core::option::Option<
             unsafe extern "C" fn(
-                __cookie: *mut ::std::os::raw::c_void,
+                __cookie: *mut ::core::ffi::c_void,
                 __off: fpos_t,
                 __whence: ::std::os::raw::c_int,
             ) -> fpos_t,
         >,
         __closefn: ::core::option::Option<
-            unsafe extern "C" fn(__cookie: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
+            unsafe extern "C" fn(__cookie: *mut ::core::ffi::c_void) -> ::std::os::raw::c_int,
         >,
     ) -> *mut FILE;
 }
 extern "C" {
     pub fn _funopen_r(
         arg1: *mut _reent,
-        __cookie: *const ::std::os::raw::c_void,
+        __cookie: *const ::core::ffi::c_void,
         __readfn: ::core::option::Option<
             unsafe extern "C" fn(
-                __cookie: *mut ::std::os::raw::c_void,
+                __cookie: *mut ::core::ffi::c_void,
                 __buf: *mut ::std::os::raw::c_char,
                 __n: ::std::os::raw::c_int,
             ) -> ::std::os::raw::c_int,
         >,
         __writefn: ::core::option::Option<
             unsafe extern "C" fn(
-                __cookie: *mut ::std::os::raw::c_void,
+                __cookie: *mut ::core::ffi::c_void,
                 __buf: *const ::std::os::raw::c_char,
                 __n: ::std::os::raw::c_int,
             ) -> ::std::os::raw::c_int,
         >,
         __seekfn: ::core::option::Option<
             unsafe extern "C" fn(
-                __cookie: *mut ::std::os::raw::c_void,
+                __cookie: *mut ::core::ffi::c_void,
                 __off: fpos_t,
                 __whence: ::std::os::raw::c_int,
             ) -> fpos_t,
         >,
         __closefn: ::core::option::Option<
-            unsafe extern "C" fn(__cookie: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
+            unsafe extern "C" fn(__cookie: *mut ::core::ffi::c_void) -> ::std::os::raw::c_int,
         >,
     ) -> *mut FILE;
 }
 pub type cookie_read_function_t = ::core::option::Option<
     unsafe extern "C" fn(
-        __cookie: *mut ::std::os::raw::c_void,
+        __cookie: *mut ::core::ffi::c_void,
         __buf: *mut ::std::os::raw::c_char,
-        __n: usize,
-    ) -> isize,
+        __n: size_t,
+    ) -> ssize_t,
 >;
 pub type cookie_write_function_t = ::core::option::Option<
     unsafe extern "C" fn(
-        __cookie: *mut ::std::os::raw::c_void,
+        __cookie: *mut ::core::ffi::c_void,
         __buf: *const ::std::os::raw::c_char,
-        __n: usize,
-    ) -> isize,
+        __n: size_t,
+    ) -> ssize_t,
 >;
 pub type cookie_seek_function_t = ::core::option::Option<
     unsafe extern "C" fn(
-        __cookie: *mut ::std::os::raw::c_void,
+        __cookie: *mut ::core::ffi::c_void,
         __off: *mut off_t,
         __whence: ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int,
 >;
 pub type cookie_close_function_t = ::core::option::Option<
-    unsafe extern "C" fn(__cookie: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
+    unsafe extern "C" fn(__cookie: *mut ::core::ffi::c_void) -> ::std::os::raw::c_int,
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -12306,7 +12302,7 @@ pub struct cookie_io_functions_t {
 }
 extern "C" {
     pub fn fopencookie(
-        __cookie: *mut ::std::os::raw::c_void,
+        __cookie: *mut ::core::ffi::c_void,
         __mode: *const ::std::os::raw::c_char,
         __functions: cookie_io_functions_t,
     ) -> *mut FILE;
@@ -12314,7 +12310,7 @@ extern "C" {
 extern "C" {
     pub fn _fopencookie_r(
         arg1: *mut _reent,
-        __cookie: *mut ::std::os::raw::c_void,
+        __cookie: *mut ::core::ffi::c_void,
         __mode: *const ::std::os::raw::c_char,
         __functions: cookie_io_functions_t,
     ) -> *mut FILE;
@@ -12352,7 +12348,7 @@ extern "C" {
     pub fn esp_err_to_name_r(
         code: esp_err_t,
         buf: *mut ::std::os::raw::c_char,
-        buflen: usize,
+        buflen: size_t,
     ) -> *const ::std::os::raw::c_char;
 }
 extern "C" {
@@ -12379,76 +12375,76 @@ extern "C" {
     pub static Xthal_rev_no: ::std::os::raw::c_uint;
 }
 extern "C" {
-    pub fn xthal_save_extra(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_extra(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_extra(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_extra(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cpregs(base: *mut ::std::os::raw::c_void, arg1: ::std::os::raw::c_int);
+    pub fn xthal_save_cpregs(base: *mut ::core::ffi::c_void, arg1: ::std::os::raw::c_int);
 }
 extern "C" {
-    pub fn xthal_restore_cpregs(base: *mut ::std::os::raw::c_void, arg1: ::std::os::raw::c_int);
+    pub fn xthal_restore_cpregs(base: *mut ::core::ffi::c_void, arg1: ::std::os::raw::c_int);
 }
 extern "C" {
-    pub fn xthal_save_cp0(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp0(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cp1(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp1(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cp2(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp2(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cp3(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp3(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cp4(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp4(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cp5(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp5(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cp6(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp6(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_save_cp7(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_save_cp7(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp0(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp0(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp1(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp1(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp2(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp2(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp3(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp3(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp4(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp4(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp5(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp5(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp6(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp6(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_restore_cp7(base: *mut ::std::os::raw::c_void);
+    pub fn xthal_restore_cp7(base: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub static mut Xthal_cpregs_save_fn: [*mut ::std::os::raw::c_void; 8usize];
+    pub static mut Xthal_cpregs_save_fn: [*mut ::core::ffi::c_void; 8usize];
 }
 extern "C" {
-    pub static mut Xthal_cpregs_restore_fn: [*mut ::std::os::raw::c_void; 8usize];
+    pub static mut Xthal_cpregs_restore_fn: [*mut ::core::ffi::c_void; 8usize];
 }
 extern "C" {
-    pub static mut Xthal_cpregs_save_nw_fn: [*mut ::std::os::raw::c_void; 8usize];
+    pub static mut Xthal_cpregs_save_nw_fn: [*mut ::core::ffi::c_void; 8usize];
 }
 extern "C" {
-    pub static mut Xthal_cpregs_restore_nw_fn: [*mut ::std::os::raw::c_void; 8usize];
+    pub static mut Xthal_cpregs_restore_nw_fn: [*mut ::core::ffi::c_void; 8usize];
 }
 extern "C" {
     pub static Xthal_extra_size: ::std::os::raw::c_uint;
@@ -12457,10 +12453,10 @@ extern "C" {
     pub static Xthal_extra_align: ::std::os::raw::c_uint;
 }
 extern "C" {
-    pub static mut Xthal_cpregs_size: [::std::os::raw::c_uint; 8usize];
+    pub static Xthal_cpregs_size: [::std::os::raw::c_uint; 8usize];
 }
 extern "C" {
-    pub static mut Xthal_cpregs_align: [::std::os::raw::c_uint; 8usize];
+    pub static Xthal_cpregs_align: [::std::os::raw::c_uint; 8usize];
 }
 extern "C" {
     pub static Xthal_all_extra_size: ::std::os::raw::c_uint;
@@ -12469,13 +12465,13 @@ extern "C" {
     pub static Xthal_all_extra_align: ::std::os::raw::c_uint;
 }
 extern "C" {
-    pub static mut Xthal_cp_names: [*const ::std::os::raw::c_char; 8usize];
+    pub static Xthal_cp_names: [*const ::std::os::raw::c_char; 8usize];
 }
 extern "C" {
-    pub fn xthal_init_mem_extra(arg1: *mut ::std::os::raw::c_void);
+    pub fn xthal_init_mem_extra(arg1: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_init_mem_cp(arg1: *mut ::std::os::raw::c_void, arg2: ::std::os::raw::c_int);
+    pub fn xthal_init_mem_cp(arg1: *mut ::core::ffi::c_void, arg2: ::std::os::raw::c_int);
 }
 extern "C" {
     pub static Xthal_num_coprocessors: ::std::os::raw::c_uint;
@@ -12518,39 +12514,39 @@ extern "C" {
 }
 extern "C" {
     pub fn xthal_icache_region_invalidate(
-        addr: *mut ::std::os::raw::c_void,
+        addr: *mut ::core::ffi::c_void,
         size: ::std::os::raw::c_uint,
     );
 }
 extern "C" {
     pub fn xthal_dcache_region_invalidate(
-        addr: *mut ::std::os::raw::c_void,
+        addr: *mut ::core::ffi::c_void,
         size: ::std::os::raw::c_uint,
     );
 }
 extern "C" {
-    pub fn xthal_icache_line_invalidate(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_icache_line_invalidate(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_dcache_line_invalidate(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_dcache_line_invalidate(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn xthal_dcache_region_writeback(
-        addr: *mut ::std::os::raw::c_void,
+        addr: *mut ::core::ffi::c_void,
         size: ::std::os::raw::c_uint,
     );
 }
 extern "C" {
-    pub fn xthal_dcache_line_writeback(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_dcache_line_writeback(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn xthal_dcache_region_writeback_inv(
-        addr: *mut ::std::os::raw::c_void,
+        addr: *mut ::core::ffi::c_void,
         size: ::std::os::raw::c_uint,
     );
 }
 extern "C" {
-    pub fn xthal_dcache_line_writeback_inv(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_dcache_line_writeback_inv(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn xthal_icache_sync();
@@ -12597,15 +12593,15 @@ extern "C" {
     pub static Xthal_debug_configured: ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn xthal_set_soft_break(addr: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_uint;
+    pub fn xthal_set_soft_break(addr: *mut ::core::ffi::c_void) -> ::std::os::raw::c_uint;
 }
 extern "C" {
-    pub fn xthal_remove_soft_break(addr: *mut ::std::os::raw::c_void, arg1: ::std::os::raw::c_uint);
+    pub fn xthal_remove_soft_break(addr: *mut ::core::ffi::c_void, arg1: ::std::os::raw::c_uint);
 }
 extern "C" {
     pub fn xthal_disassemble(
         instr_buf: *mut ::std::os::raw::c_uchar,
-        tgt_addr: *mut ::std::os::raw::c_void,
+        tgt_addr: *mut ::core::ffi::c_void,
         buffer: *mut ::std::os::raw::c_char,
         buflen: ::std::os::raw::c_uint,
         options: ::std::os::raw::c_uint,
@@ -12617,17 +12613,17 @@ extern "C" {
 }
 extern "C" {
     pub fn xthal_memcpy(
-        dst: *mut ::std::os::raw::c_void,
-        src: *const ::std::os::raw::c_void,
+        dst: *mut ::core::ffi::c_void,
+        src: *const ::core::ffi::c_void,
         len: ::std::os::raw::c_uint,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn xthal_bcopy(
-        src: *const ::std::os::raw::c_void,
-        dst: *mut ::std::os::raw::c_void,
+        src: *const ::core::ffi::c_void,
+        dst: *mut ::core::ffi::c_void,
         len: ::std::os::raw::c_uint,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn xthal_compare_and_set(
@@ -12745,22 +12741,22 @@ extern "C" {
     pub static Xthal_excm_level: ::std::os::raw::c_uchar;
 }
 extern "C" {
-    pub static mut Xthal_intlevel_mask: [::std::os::raw::c_uint; 16usize];
+    pub static Xthal_intlevel_mask: [::std::os::raw::c_uint; 16usize];
 }
 extern "C" {
-    pub static mut Xthal_intlevel_andbelow_mask: [::std::os::raw::c_uint; 16usize];
+    pub static Xthal_intlevel_andbelow_mask: [::std::os::raw::c_uint; 16usize];
 }
 extern "C" {
-    pub static mut Xthal_intlevel: [::std::os::raw::c_uchar; 32usize];
+    pub static Xthal_intlevel: [::std::os::raw::c_uchar; 32usize];
 }
 extern "C" {
-    pub static mut Xthal_inttype: [::std::os::raw::c_uchar; 32usize];
+    pub static Xthal_inttype: [::std::os::raw::c_uchar; 32usize];
 }
 extern "C" {
-    pub static mut Xthal_inttype_mask: [::std::os::raw::c_uint; 8usize];
+    pub static Xthal_inttype_mask: [::std::os::raw::c_uint; 8usize];
 }
 extern "C" {
-    pub static mut Xthal_timer_interrupt: [::std::os::raw::c_int; 4usize];
+    pub static Xthal_timer_interrupt: [::std::os::raw::c_int; 4usize];
 }
 extern "C" {
     pub fn xthal_get_intenable() -> ::std::os::raw::c_uint;
@@ -12981,7 +12977,7 @@ extern "C" {
 }
 extern "C" {
     pub fn xthal_set_region_attribute(
-        addr: *mut ::std::os::raw::c_void,
+        addr: *mut ::core::ffi::c_void,
         size: ::std::os::raw::c_uint,
         cattr: ::std::os::raw::c_uint,
         flags: ::std::os::raw::c_uint,
@@ -13012,22 +13008,16 @@ extern "C" {
     pub fn xthal_dcache_all_writeback_inv();
 }
 extern "C" {
-    pub fn xthal_icache_region_lock(
-        addr: *mut ::std::os::raw::c_void,
-        size: ::std::os::raw::c_uint,
-    );
+    pub fn xthal_icache_region_lock(addr: *mut ::core::ffi::c_void, size: ::std::os::raw::c_uint);
 }
 extern "C" {
-    pub fn xthal_dcache_region_lock(
-        addr: *mut ::std::os::raw::c_void,
-        size: ::std::os::raw::c_uint,
-    );
+    pub fn xthal_dcache_region_lock(addr: *mut ::core::ffi::c_void, size: ::std::os::raw::c_uint);
 }
 extern "C" {
-    pub fn xthal_icache_line_lock(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_icache_line_lock(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_dcache_line_lock(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_dcache_line_lock(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn xthal_icache_all_unlock();
@@ -13036,26 +13026,20 @@ extern "C" {
     pub fn xthal_dcache_all_unlock();
 }
 extern "C" {
-    pub fn xthal_icache_region_unlock(
-        addr: *mut ::std::os::raw::c_void,
-        size: ::std::os::raw::c_uint,
-    );
+    pub fn xthal_icache_region_unlock(addr: *mut ::core::ffi::c_void, size: ::std::os::raw::c_uint);
 }
 extern "C" {
-    pub fn xthal_dcache_region_unlock(
-        addr: *mut ::std::os::raw::c_void,
-        size: ::std::os::raw::c_uint,
-    );
+    pub fn xthal_dcache_region_unlock(addr: *mut ::core::ffi::c_void, size: ::std::os::raw::c_uint);
 }
 extern "C" {
-    pub fn xthal_icache_line_unlock(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_icache_line_unlock(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
-    pub fn xthal_dcache_line_unlock(addr: *mut ::std::os::raw::c_void);
+    pub fn xthal_dcache_line_unlock(addr: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn xthal_memep_inject_error(
-        addr: *mut ::std::os::raw::c_void,
+        addr: *mut ::core::ffi::c_void,
         size: ::std::os::raw::c_int,
         flags: ::std::os::raw::c_int,
     );
@@ -13136,8 +13120,8 @@ extern "C" {
 }
 extern "C" {
     pub fn xthal_set_region_translation(
-        vaddr: *mut ::std::os::raw::c_void,
-        paddr: *mut ::std::os::raw::c_void,
+        vaddr: *mut ::core::ffi::c_void,
+        paddr: *mut ::core::ffi::c_void,
         size: ::std::os::raw::c_uint,
         cache_atr: ::std::os::raw::c_uint,
         flags: ::std::os::raw::c_uint,
@@ -13145,19 +13129,19 @@ extern "C" {
 }
 extern "C" {
     pub fn xthal_v2p(
-        arg1: *mut ::std::os::raw::c_void,
-        arg2: *mut *mut ::std::os::raw::c_void,
+        arg1: *mut ::core::ffi::c_void,
+        arg2: *mut *mut ::core::ffi::c_void,
         arg3: *mut ::std::os::raw::c_uint,
         arg4: *mut ::std::os::raw::c_uint,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn xthal_invalidate_region(addr: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int;
+    pub fn xthal_invalidate_region(addr: *mut ::core::ffi::c_void) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn xthal_set_region_translation_raw(
-        vaddr: *mut ::std::os::raw::c_void,
-        paddr: *mut ::std::os::raw::c_void,
+        vaddr: *mut ::core::ffi::c_void,
+        paddr: *mut ::core::ffi::c_void,
         cattr: ::std::os::raw::c_uint,
     ) -> ::std::os::raw::c_int;
 }
@@ -13287,8 +13271,7 @@ pub struct XtSolFrame {
     pub a2: ::std::os::raw::c_long,
     pub a3: ::std::os::raw::c_long,
 }
-pub type xt_handler =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>;
+pub type xt_handler = ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::core::ffi::c_void)>;
 pub type xt_exc_handler = ::core::option::Option<unsafe extern "C" fn(arg1: *mut XtExcFrame)>;
 extern "C" {
     pub fn xt_set_exception_handler(n: ::std::os::raw::c_int, f: xt_exc_handler) -> xt_exc_handler;
@@ -13297,7 +13280,7 @@ extern "C" {
     pub fn xt_set_interrupt_handler(
         n: ::std::os::raw::c_int,
         f: xt_handler,
-        arg: *mut ::std::os::raw::c_void,
+        arg: *mut ::core::ffi::c_void,
     ) -> xt_handler;
 }
 extern "C" {
@@ -13307,10 +13290,10 @@ extern "C" {
     pub fn xt_ints_off(mask: ::std::os::raw::c_uint);
 }
 extern "C" {
-    pub fn xt_get_interrupt_handler_arg(n: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_void;
+    pub fn xt_get_interrupt_handler_arg(n: ::std::os::raw::c_int) -> *mut ::core::ffi::c_void;
 }
 pub type intr_handler_t =
-    ::core::option::Option<unsafe extern "C" fn(arg: *mut ::std::os::raw::c_void)>;
+    ::core::option::Option<unsafe extern "C" fn(arg: *mut ::core::ffi::c_void)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct intr_handle_data_t {
@@ -13386,7 +13369,7 @@ extern "C" {
         source: ::std::os::raw::c_int,
         flags: ::std::os::raw::c_int,
         handler: intr_handler_t,
-        arg: *mut ::std::os::raw::c_void,
+        arg: *mut ::core::ffi::c_void,
         ret_handle: *mut intr_handle_t,
     ) -> esp_err_t;
 }
@@ -13430,7 +13413,7 @@ extern "C" {
         intrstatusreg: u32,
         intrstatusmask: u32,
         handler: intr_handler_t,
-        arg: *mut ::std::os::raw::c_void,
+        arg: *mut ::core::ffi::c_void,
         ret_handle: *mut intr_handle_t,
     ) -> esp_err_t;
 }
@@ -13617,8 +13600,8 @@ pub struct lldiv_t {
 }
 pub type __compar_fn_t = ::core::option::Option<
     unsafe extern "C" fn(
-        arg1: *const ::std::os::raw::c_void,
-        arg2: *const ::std::os::raw::c_void,
+        arg1: *const ::core::ffi::c_void,
+        arg2: *const ::core::ffi::c_void,
     ) -> ::std::os::raw::c_int,
 >;
 extern "C" {
@@ -13659,18 +13642,18 @@ extern "C" {
 }
 extern "C" {
     pub fn bsearch(
-        __key: *const ::std::os::raw::c_void,
-        __base: *const ::std::os::raw::c_void,
-        __nmemb: usize,
-        __size: usize,
+        __key: *const ::core::ffi::c_void,
+        __base: *const ::core::ffi::c_void,
+        __nmemb: size_t,
+        __size: size_t,
         _compar: __compar_fn_t,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn calloc(
         __nmemb: ::std::os::raw::c_uint,
         __size: ::std::os::raw::c_uint,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn div(__numer: ::std::os::raw::c_int, __denom: ::std::os::raw::c_int) -> div_t;
@@ -13679,7 +13662,7 @@ extern "C" {
     pub fn exit(__status: ::std::os::raw::c_int);
 }
 extern "C" {
-    pub fn free(arg1: *mut ::std::os::raw::c_void);
+    pub fn free(arg1: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn getenv(__string: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char;
@@ -13720,16 +13703,16 @@ extern "C" {
     pub fn ldiv(__numer: ::std::os::raw::c_long, __denom: ::std::os::raw::c_long) -> ldiv_t;
 }
 extern "C" {
-    pub fn malloc(__size: ::std::os::raw::c_uint) -> *mut ::std::os::raw::c_void;
+    pub fn malloc(__size: ::std::os::raw::c_uint) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
-    pub fn mblen(arg1: *const ::std::os::raw::c_char, arg2: usize) -> ::std::os::raw::c_int;
+    pub fn mblen(arg1: *const ::std::os::raw::c_char, arg2: size_t) -> ::std::os::raw::c_int;
 }
 extern "C" {
     pub fn _mblen_r(
         arg1: *mut _reent,
         arg2: *const ::std::os::raw::c_char,
-        arg3: usize,
+        arg3: size_t,
         arg4: *mut _mbstate_t,
     ) -> ::std::os::raw::c_int;
 }
@@ -13737,7 +13720,7 @@ extern "C" {
     pub fn mbtowc(
         arg1: *mut wchar_t,
         arg2: *const ::std::os::raw::c_char,
-        arg3: usize,
+        arg3: size_t,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -13745,7 +13728,7 @@ extern "C" {
         arg1: *mut _reent,
         arg2: *mut wchar_t,
         arg3: *const ::std::os::raw::c_char,
-        arg4: usize,
+        arg4: size_t,
         arg5: *mut _mbstate_t,
     ) -> ::std::os::raw::c_int;
 }
@@ -13761,28 +13744,36 @@ extern "C" {
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
-    pub fn mbstowcs(arg1: *mut wchar_t, arg2: *const ::std::os::raw::c_char, arg3: usize) -> usize;
+    pub fn mbstowcs(
+        arg1: *mut wchar_t,
+        arg2: *const ::std::os::raw::c_char,
+        arg3: size_t,
+    ) -> size_t;
 }
 extern "C" {
     pub fn _mbstowcs_r(
         arg1: *mut _reent,
         arg2: *mut wchar_t,
         arg3: *const ::std::os::raw::c_char,
-        arg4: usize,
+        arg4: size_t,
         arg5: *mut _mbstate_t,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
-    pub fn wcstombs(arg1: *mut ::std::os::raw::c_char, arg2: *const wchar_t, arg3: usize) -> usize;
+    pub fn wcstombs(
+        arg1: *mut ::std::os::raw::c_char,
+        arg2: *const wchar_t,
+        arg3: size_t,
+    ) -> size_t;
 }
 extern "C" {
     pub fn _wcstombs_r(
         arg1: *mut _reent,
         arg2: *mut ::std::os::raw::c_char,
         arg3: *const wchar_t,
-        arg4: usize,
+        arg4: size_t,
         arg5: *mut _mbstate_t,
-    ) -> usize;
+    ) -> size_t;
 }
 extern "C" {
     pub fn mkdtemp(arg1: *mut ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char;
@@ -13854,9 +13845,9 @@ extern "C" {
 }
 extern "C" {
     pub fn qsort(
-        __base: *mut ::std::os::raw::c_void,
-        __nmemb: usize,
-        __size: usize,
+        __base: *mut ::core::ffi::c_void,
+        __nmemb: size_t,
+        __size: size_t,
         _compar: __compar_fn_t,
     );
 }
@@ -13865,13 +13856,12 @@ extern "C" {
 }
 extern "C" {
     pub fn realloc(
-        __r: *mut ::std::os::raw::c_void,
+        __r: *mut ::core::ffi::c_void,
         __size: ::std::os::raw::c_uint,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
-    pub fn reallocf(__r: *mut ::std::os::raw::c_void, __size: usize)
-        -> *mut ::std::os::raw::c_void;
+    pub fn reallocf(__r: *mut ::core::ffi::c_void, __size: size_t) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn realpath(
@@ -13949,9 +13939,9 @@ extern "C" {
 extern "C" {
     pub fn on_exit(
         __func: ::core::option::Option<
-            unsafe extern "C" fn(arg1: ::std::os::raw::c_int, arg2: *mut ::std::os::raw::c_void),
+            unsafe extern "C" fn(arg1: ::std::os::raw::c_int, arg2: *mut ::core::ffi::c_void),
         >,
-        __arg: *mut ::std::os::raw::c_void,
+        __arg: *mut ::core::ffi::c_void,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -13969,9 +13959,9 @@ extern "C" {
 extern "C" {
     pub fn _reallocf_r(
         arg1: *mut _reent,
-        arg2: *mut ::std::os::raw::c_void,
-        arg3: usize,
-    ) -> *mut ::std::os::raw::c_void;
+        arg2: *mut ::core::ffi::c_void,
+        arg3: size_t,
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn setenv(
@@ -14205,7 +14195,7 @@ extern "C" {
     ) -> ::std::os::raw::c_ulonglong;
 }
 extern "C" {
-    pub fn cfree(arg1: *mut ::std::os::raw::c_void);
+    pub fn cfree(arg1: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn unsetenv(__string: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
@@ -14228,20 +14218,20 @@ extern "C" {
     ) -> *mut ::std::os::raw::c_char;
 }
 extern "C" {
-    pub fn _malloc_r(arg1: *mut _reent, arg2: usize) -> *mut ::std::os::raw::c_void;
+    pub fn _malloc_r(arg1: *mut _reent, arg2: size_t) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
-    pub fn _calloc_r(arg1: *mut _reent, arg2: usize, arg3: usize) -> *mut ::std::os::raw::c_void;
+    pub fn _calloc_r(arg1: *mut _reent, arg2: size_t, arg3: size_t) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
-    pub fn _free_r(arg1: *mut _reent, arg2: *mut ::std::os::raw::c_void);
+    pub fn _free_r(arg1: *mut _reent, arg2: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn _realloc_r(
         arg1: *mut _reent,
-        arg2: *mut ::std::os::raw::c_void,
-        arg3: usize,
-    ) -> *mut ::std::os::raw::c_void;
+        arg2: *mut ::core::ffi::c_void,
+        arg3: size_t,
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn _mstats_r(arg1: *mut _reent, arg2: *mut ::std::os::raw::c_char);
@@ -14286,7 +14276,7 @@ pub struct ETSEventTag {
 }
 pub type ETSTask = ::core::option::Option<unsafe extern "C" fn(e: *mut ETSEvent)>;
 pub type ets_idle_cb_t =
-    ::core::option::Option<unsafe extern "C" fn(arg: *mut ::std::os::raw::c_void)>;
+    ::core::option::Option<unsafe extern "C" fn(arg: *mut ::core::ffi::c_void)>;
 extern "C" {
     #[doc = " @brief  Start the Espressif Task Scheduler, which is an infinit loop. Please do not add code after it."]
     #[doc = ""]
@@ -14303,7 +14293,7 @@ extern "C" {
     #[doc = " @param  void *arg : Argument of the callback."]
     #[doc = ""]
     #[doc = " @return None"]
-    pub fn ets_set_idle_cb(func: ets_idle_cb_t, arg: *mut ::std::os::raw::c_void);
+    pub fn ets_set_idle_cb(func: ets_idle_cb_t, arg: *mut ::core::ffi::c_void);
 }
 extern "C" {
     #[doc = " @brief  Init a task with processer, priority, queue to receive Event, queue length."]
@@ -14333,7 +14323,7 @@ extern "C" {
     pub fn ets_post(prio: u8, sig: ETSSignal, par: ETSParam) -> ETS_STATUS;
 }
 extern "C" {
-    pub static mut exc_cause_table: [*const ::std::os::raw::c_char; 40usize];
+    pub static exc_cause_table: [*const ::std::os::raw::c_char; 40usize];
 }
 extern "C" {
     #[doc = " @brief  Set Pro cpu Entry code, code can be called in PRO CPU when booting is not completed."]
@@ -14460,7 +14450,7 @@ extern "C" {
 #[doc = " @addtogroup ets_timer_apis"]
 #[doc = " @{"]
 pub type ETSTimerFunc =
-    ::core::option::Option<unsafe extern "C" fn(timer_arg: *mut ::std::os::raw::c_void)>;
+    ::core::option::Option<unsafe extern "C" fn(timer_arg: *mut ::core::ffi::c_void)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _ETSTIMER_ {
@@ -14473,7 +14463,7 @@ pub struct _ETSTIMER_ {
     #[doc = "< timer handler"]
     pub timer_func: ETSTimerFunc,
     #[doc = "< timer handler argument"]
-    pub timer_arg: *mut ::std::os::raw::c_void,
+    pub timer_arg: *mut ::core::ffi::c_void,
 }
 pub type ETSTimer = _ETSTIMER_;
 extern "C" {
@@ -14542,7 +14532,7 @@ extern "C" {
     pub fn ets_timer_setfn(
         ptimer: *mut ETSTimer,
         pfunction: ETSTimerFunc,
-        parg: *mut ::std::os::raw::c_void,
+        parg: *mut ::core::ffi::c_void,
     );
 }
 extern "C" {
@@ -14614,8 +14604,7 @@ extern "C" {
 }
 #[doc = " @addtogroup ets_intr_apis"]
 #[doc = " @{"]
-pub type ets_isr_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>;
+pub type ets_isr_t = ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::core::ffi::c_void)>;
 extern "C" {
     #[doc = " @brief  Attach a interrupt handler to a CPU interrupt number."]
     #[doc = "         This function equals to _xtos_set_interrupt_handler_arg(i, func, arg)."]
@@ -14628,11 +14617,7 @@ extern "C" {
     #[doc = " @param  void *arg : argument of the handler."]
     #[doc = ""]
     #[doc = " @return None"]
-    pub fn ets_isr_attach(
-        i: ::std::os::raw::c_int,
-        func: ets_isr_t,
-        arg: *mut ::std::os::raw::c_void,
-    );
+    pub fn ets_isr_attach(i: ::std::os::raw::c_int, func: ets_isr_t, arg: *mut ::core::ffi::c_void);
 }
 extern "C" {
     #[doc = " @brief  Mask the interrupts which show in mask bits."]
@@ -14708,7 +14693,7 @@ pub const STATUS_BUSY: STATUS = 3;
 pub const STATUS_CANCEL: STATUS = 4;
 pub type STATUS = u32;
 pub type TaskFunction_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>;
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::core::ffi::c_void)>;
 #[repr(C)]
 pub struct XtosCoreState {
     pub signature: ::std::os::raw::c_long,
@@ -14787,7 +14772,7 @@ extern "C" {
     pub fn _xtos_set_interrupt_handler_arg(
         n: ::std::os::raw::c_int,
         f: _xtos_handler,
-        arg: *mut ::std::os::raw::c_void,
+        arg: *mut ::core::ffi::c_void,
     ) -> _xtos_handler;
 }
 extern "C" {
@@ -14831,7 +14816,7 @@ extern "C" {
     pub fn _xtos_core_save(
         flags: ::std::os::raw::c_uint,
         savearea: *mut XtosCoreState,
-        code: *mut ::std::os::raw::c_void,
+        code: *mut ::core::ffi::c_void,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -14887,7 +14872,7 @@ pub type esp_timer_handle_t = *mut esp_timer;
 #[doc = " @brief Timer callback function type"]
 #[doc = " @param arg pointer to opaque user-specific data"]
 pub type esp_timer_cb_t =
-    ::core::option::Option<unsafe extern "C" fn(arg: *mut ::std::os::raw::c_void)>;
+    ::core::option::Option<unsafe extern "C" fn(arg: *mut ::core::ffi::c_void)>;
 #[doc = "!< Callback is called from timer task"]
 pub const esp_timer_dispatch_t_ESP_TIMER_TASK: esp_timer_dispatch_t = 0;
 #[doc = " @brief Method for dispatching timer callback"]
@@ -14899,7 +14884,7 @@ pub struct esp_timer_create_args_t {
     #[doc = "!< Function to call when timer expires"]
     pub callback: esp_timer_cb_t,
     #[doc = "!< Argument to pass to the callback"]
-    pub arg: *mut ::std::os::raw::c_void,
+    pub arg: *mut ::core::ffi::c_void,
     #[doc = "!< Call the callback from task or from ISR"]
     pub dispatch_method: esp_timer_dispatch_t,
     #[doc = "!< Timer name, used in esp_timer_dump function"]
@@ -15056,8 +15041,7 @@ extern "C" {
     #[doc = " @param size Size of desired buffer."]
     #[doc = ""]
     #[doc = " @return Pointer to new memory, or NULL if allocation fails."]
-    pub fn multi_heap_malloc(heap: multi_heap_handle_t, size: usize)
-        -> *mut ::std::os::raw::c_void;
+    pub fn multi_heap_malloc(heap: multi_heap_handle_t, size: size_t) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief free() a buffer in a given heap."]
@@ -15066,7 +15050,7 @@ extern "C" {
     #[doc = ""]
     #[doc = " @param heap Handle to a registered heap."]
     #[doc = " @param p NULL, or a pointer previously returned from multi_heap_malloc() or multi_heap_realloc() for the same heap."]
-    pub fn multi_heap_free(heap: multi_heap_handle_t, p: *mut ::std::os::raw::c_void);
+    pub fn multi_heap_free(heap: multi_heap_handle_t, p: *mut ::core::ffi::c_void);
 }
 extern "C" {
     #[doc = " @brief realloc() a buffer in a given heap."]
@@ -15080,9 +15064,9 @@ extern "C" {
     #[doc = " @return New buffer of 'size' containing contents of 'p', or NULL if reallocation failed."]
     pub fn multi_heap_realloc(
         heap: multi_heap_handle_t,
-        p: *mut ::std::os::raw::c_void,
-        size: usize,
-    ) -> *mut ::std::os::raw::c_void;
+        p: *mut ::core::ffi::c_void,
+        size: size_t,
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief Return the size that a particular pointer was allocated with."]
@@ -15094,8 +15078,8 @@ extern "C" {
     #[doc = " to padding and minimum block sizes."]
     pub fn multi_heap_get_allocated_size(
         heap: multi_heap_handle_t,
-        p: *mut ::std::os::raw::c_void,
-    ) -> usize;
+        p: *mut ::core::ffi::c_void,
+    ) -> size_t;
 }
 extern "C" {
     #[doc = " @brief Register a new heap for use"]
@@ -15109,8 +15093,8 @@ extern "C" {
     #[doc = ""]
     #[doc = " @return Handle of a new heap ready for use, or NULL if the heap region was too small to be initialised."]
     pub fn multi_heap_register(
-        start: *mut ::std::os::raw::c_void,
-        size: usize,
+        start: *mut ::core::ffi::c_void,
+        size: size_t,
     ) -> multi_heap_handle_t;
 }
 extern "C" {
@@ -15124,7 +15108,7 @@ extern "C" {
     #[doc = ""]
     #[doc = " @param heap Handle to a registered heap."]
     #[doc = " @param lock Optional pointer to a locking structure to associate with this heap."]
-    pub fn multi_heap_set_lock(heap: multi_heap_handle_t, lock: *mut ::std::os::raw::c_void);
+    pub fn multi_heap_set_lock(heap: multi_heap_handle_t, lock: *mut ::core::ffi::c_void);
 }
 extern "C" {
     #[doc = " @brief Dump heap information to stdout"]
@@ -15158,7 +15142,7 @@ extern "C" {
     #[doc = ""]
     #[doc = " @param heap Handle to a registered heap."]
     #[doc = " @return Number of free bytes."]
-    pub fn multi_heap_free_size(heap: multi_heap_handle_t) -> usize;
+    pub fn multi_heap_free_size(heap: multi_heap_handle_t) -> size_t;
 }
 extern "C" {
     #[doc = " @brief Return the lifetime minimum free heap size"]
@@ -15170,26 +15154,26 @@ extern "C" {
     #[doc = ""]
     #[doc = " @param heap Handle to a registered heap."]
     #[doc = " @return Number of free bytes."]
-    pub fn multi_heap_minimum_free_size(heap: multi_heap_handle_t) -> usize;
+    pub fn multi_heap_minimum_free_size(heap: multi_heap_handle_t) -> size_t;
 }
 #[doc = " @brief Structure to access heap metadata via multi_heap_get_info"]
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct multi_heap_info_t {
     #[doc = "<  Total free bytes in the heap. Equivalent to multi_free_heap_size()."]
-    pub total_free_bytes: usize,
+    pub total_free_bytes: size_t,
     #[doc = "<  Total bytes allocated to data in the heap."]
-    pub total_allocated_bytes: usize,
+    pub total_allocated_bytes: size_t,
     #[doc = "<  Size of largest free block in the heap. This is the largest malloc-able size."]
-    pub largest_free_block: usize,
+    pub largest_free_block: size_t,
     #[doc = "<  Lifetime minimum free heap size. Equivalent to multi_minimum_free_heap_size()."]
-    pub minimum_free_bytes: usize,
+    pub minimum_free_bytes: size_t,
     #[doc = "<  Number of (variable size) blocks allocated in the heap."]
-    pub allocated_blocks: usize,
+    pub allocated_blocks: size_t,
     #[doc = "<  Number of (variable size) free blocks in the heap."]
-    pub free_blocks: usize,
+    pub free_blocks: size_t,
     #[doc = "<  Total number of (variable size) blocks in the heap."]
-    pub total_blocks: usize,
+    pub total_blocks: size_t,
 }
 extern "C" {
     #[doc = " @brief Return metadata about a given heap"]
@@ -15212,7 +15196,7 @@ extern "C" {
     #[doc = "                    of memory to be returned"]
     #[doc = ""]
     #[doc = " @return A pointer to the memory allocated on success, NULL on failure"]
-    pub fn heap_caps_malloc(size: usize, caps: u32) -> *mut ::std::os::raw::c_void;
+    pub fn heap_caps_malloc(size: size_t, caps: u32) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief Free memory previously allocated via heap_caps_malloc() or heap_caps_realloc()."]
@@ -15222,7 +15206,7 @@ extern "C" {
     #[doc = "  In IDF, ``free(p)`` is equivalent to ``heap_caps_free(p)``."]
     #[doc = ""]
     #[doc = " @param ptr Pointer to memory previously returned from heap_caps_malloc() or heap_caps_realloc(). Can be NULL."]
-    pub fn heap_caps_free(ptr: *mut ::std::os::raw::c_void);
+    pub fn heap_caps_free(ptr: *mut ::core::ffi::c_void);
 }
 extern "C" {
     #[doc = " @brief Reallocate memory previously allocated via heap_caps_malloc() or heap_caps_realloc()."]
@@ -15241,10 +15225,10 @@ extern "C" {
     #[doc = ""]
     #[doc = " @return Pointer to a new buffer of size 'size' with capabilities 'caps', or NULL if allocation failed."]
     pub fn heap_caps_realloc(
-        ptr: *mut ::std::os::raw::c_void,
-        size: usize,
+        ptr: *mut ::core::ffi::c_void,
+        size: size_t,
         caps: ::std::os::raw::c_int,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief Allocate a chunk of memory which has the given capabilities. The initialized value in the memory is set to zero."]
@@ -15259,7 +15243,7 @@ extern "C" {
     #[doc = "                    of memory to be returned"]
     #[doc = ""]
     #[doc = " @return A pointer to the memory allocated on success, NULL on failure"]
-    pub fn heap_caps_calloc(n: usize, size: usize, caps: u32) -> *mut ::std::os::raw::c_void;
+    pub fn heap_caps_calloc(n: size_t, size: size_t, caps: u32) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief Get the total free size of all the regions that have the given capabilities"]
@@ -15274,7 +15258,7 @@ extern "C" {
     #[doc = "                    of memory"]
     #[doc = ""]
     #[doc = " @return Amount of free bytes in the regions"]
-    pub fn heap_caps_get_free_size(caps: u32) -> usize;
+    pub fn heap_caps_get_free_size(caps: u32) -> size_t;
 }
 extern "C" {
     #[doc = " @brief Get the total minimum free memory of all regions with the given capabilities"]
@@ -15290,7 +15274,7 @@ extern "C" {
     #[doc = "                    of memory"]
     #[doc = ""]
     #[doc = " @return Amount of free bytes in the regions"]
-    pub fn heap_caps_get_minimum_free_size(caps: u32) -> usize;
+    pub fn heap_caps_get_minimum_free_size(caps: u32) -> size_t;
 }
 extern "C" {
     #[doc = " @brief Get the largest free block of memory able to be allocated with the given capabilities."]
@@ -15301,7 +15285,7 @@ extern "C" {
     #[doc = "                    of memory"]
     #[doc = ""]
     #[doc = " @return Size of largest free block in bytes."]
-    pub fn heap_caps_get_largest_free_block(caps: u32) -> usize;
+    pub fn heap_caps_get_largest_free_block(caps: u32) -> size_t;
 }
 extern "C" {
     #[doc = " @brief Get heap info for all regions with the given capabilities."]
@@ -15390,7 +15374,7 @@ extern "C" {
     #[doc = " enabling allocation in external memory."]
     #[doc = ""]
     #[doc = " @param limit       Limit, in bytes."]
-    pub fn heap_caps_malloc_extmem_enable(limit: usize);
+    pub fn heap_caps_malloc_extmem_enable(limit: size_t);
 }
 extern "C" {
     #[doc = " @brief Allocate a chunk of memory as preference in decreasing order."]
@@ -15404,7 +15388,7 @@ extern "C" {
     #[doc = " @param num Number of variable paramters"]
     #[doc = ""]
     #[doc = " @return A pointer to the memory allocated on success, NULL on failure"]
-    pub fn heap_caps_malloc_prefer(size: usize, num: usize, ...) -> *mut ::std::os::raw::c_void;
+    pub fn heap_caps_malloc_prefer(size: size_t, num: size_t, ...) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief Allocate a chunk of memory as preference in decreasing order."]
@@ -15415,11 +15399,11 @@ extern "C" {
     #[doc = ""]
     #[doc = " @return Pointer to a new buffer of size 'size', or NULL if allocation failed."]
     pub fn heap_caps_realloc_prefer(
-        ptr: *mut ::std::os::raw::c_void,
-        size: usize,
-        num: usize,
+        ptr: *mut ::core::ffi::c_void,
+        size: size_t,
+        num: size_t,
         ...
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief Allocate a chunk of memory as preference in decreasing order."]
@@ -15430,11 +15414,11 @@ extern "C" {
     #[doc = ""]
     #[doc = " @return A pointer to the memory allocated on success, NULL on failure"]
     pub fn heap_caps_calloc_prefer(
-        n: usize,
-        size: usize,
-        num: usize,
+        n: size_t,
+        size: size_t,
+        num: size_t,
         ...
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief Dump the full structure of all heaps with matching capabilities."]
@@ -15522,7 +15506,7 @@ extern "C" {
     pub fn esp_vApplicationTickHook();
 }
 extern "C" {
-    pub fn _xt_coproc_release(coproc_sa_base: *mut ::std::os::raw::c_void);
+    pub fn _xt_coproc_release(coproc_sa_base: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn vApplicationSleep(xExpectedIdleTime: TickType_t);
@@ -15643,7 +15627,7 @@ extern "C" {
     #[doc = ""]
     #[doc = " @param buf Pointer to buffer to fill with random numbers."]
     #[doc = " @param len Length of buffer in bytes"]
-    pub fn esp_fill_random(buf: *mut ::std::os::raw::c_void, len: usize);
+    pub fn esp_fill_random(buf: *mut ::core::ffi::c_void, len: size_t);
 }
 extern "C" {
     #[doc = " @brief  Set base MAC address with the MAC address which is stored in BLK3 of EFUSE or"]
@@ -15745,7 +15729,7 @@ extern "C" {
     pub fn pxPortInitialiseStack(
         pxTopOfStack: *mut StackType_t,
         pxCode: TaskFunction_t,
-        pvParameters: *mut ::std::os::raw::c_void,
+        pvParameters: *mut ::core::ffi::c_void,
         xRunPrivileged: BaseType_t,
     ) -> *mut StackType_t;
 }
@@ -15759,7 +15743,7 @@ extern "C" {
     pub fn vPortYieldOtherCore(coreid: BaseType_t);
 }
 extern "C" {
-    pub fn vPortSetStackWatchpoint(pxStackStart: *mut ::std::os::raw::c_void);
+    pub fn vPortSetStackWatchpoint(pxStackStart: *mut ::core::ffi::c_void);
 }
 extern "C" {
     pub fn xPortInIsrContext() -> BaseType_t;
@@ -15788,40 +15772,40 @@ extern "C" {
 #[derive(Debug, Copy, Clone)]
 pub struct xSTATIC_LIST_ITEM {
     pub xDummy1: TickType_t,
-    pub pvDummy2: [*mut ::std::os::raw::c_void; 4usize],
+    pub pvDummy2: [*mut ::core::ffi::c_void; 4usize],
 }
 pub type StaticListItem_t = xSTATIC_LIST_ITEM;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct xSTATIC_MINI_LIST_ITEM {
     pub xDummy1: TickType_t,
-    pub pvDummy2: [*mut ::std::os::raw::c_void; 2usize],
+    pub pvDummy2: [*mut ::core::ffi::c_void; 2usize],
 }
 pub type StaticMiniListItem_t = xSTATIC_MINI_LIST_ITEM;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct xSTATIC_LIST {
     pub uxDummy1: UBaseType_t,
-    pub pvDummy2: *mut ::std::os::raw::c_void,
+    pub pvDummy2: *mut ::core::ffi::c_void,
     pub xDummy3: StaticMiniListItem_t,
 }
 pub type StaticList_t = xSTATIC_LIST;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct xSTATIC_TCB {
-    pub pxDummy1: *mut ::std::os::raw::c_void,
+    pub pxDummy1: *mut ::core::ffi::c_void,
     pub xDummy2: xMPU_SETTINGS,
     pub xDummy3: [StaticListItem_t; 2usize],
     pub uxDummy5: UBaseType_t,
-    pub pxDummy6: *mut ::std::os::raw::c_void,
+    pub pxDummy6: *mut ::core::ffi::c_void,
     pub ucDummy7: [u8; 16usize],
     pub uxDummyCoreId: UBaseType_t,
-    pub pxDummy8: *mut ::std::os::raw::c_void,
+    pub pxDummy8: *mut ::core::ffi::c_void,
     pub uxDummy9: UBaseType_t,
     pub OldInterruptState: u32,
     pub uxDummy12: [UBaseType_t; 2usize],
-    pub pvDummy15: [*mut ::std::os::raw::c_void; 1usize],
-    pub pvDummyLocalStorageCallBack: [*mut ::std::os::raw::c_void; 1usize],
+    pub pvDummy15: [*mut ::core::ffi::c_void; 1usize],
+    pub pvDummyLocalStorageCallBack: [*mut ::core::ffi::c_void; 1usize],
     pub xDummy17: _reent,
     pub ulDummy18: u32,
     pub ucDummy19: u32,
@@ -15831,17 +15815,17 @@ pub type StaticTask_t = xSTATIC_TCB;
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub struct xSTATIC_QUEUE {
-    pub pvDummy1: [*mut ::std::os::raw::c_void; 3usize],
+    pub pvDummy1: [*mut ::core::ffi::c_void; 3usize],
     pub u: xSTATIC_QUEUE__bindgen_ty_1,
     pub xDummy3: [StaticList_t; 2usize],
     pub uxDummy4: [UBaseType_t; 3usize],
-    pub pvDummy7: *mut ::std::os::raw::c_void,
+    pub pvDummy7: *mut ::core::ffi::c_void,
     pub muxDummy: portMUX_TYPE,
 }
 #[repr(C)]
 #[derive(Copy, Clone)]
 pub union xSTATIC_QUEUE__bindgen_ty_1 {
-    pub pvDummy2: *mut ::std::os::raw::c_void,
+    pub pvDummy2: *mut ::core::ffi::c_void,
     pub uxDummy2: UBaseType_t,
     _bindgen_union_align: u32,
 }
@@ -15858,25 +15842,25 @@ pub type StaticEventGroup_t = xSTATIC_EVENT_GROUP;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct xSTATIC_TIMER {
-    pub pvDummy1: *mut ::std::os::raw::c_void,
+    pub pvDummy1: *mut ::core::ffi::c_void,
     pub xDummy2: StaticListItem_t,
     pub xDummy3: TickType_t,
     pub uxDummy4: UBaseType_t,
-    pub pvDummy5: [*mut ::std::os::raw::c_void; 2usize],
+    pub pvDummy5: [*mut ::core::ffi::c_void; 2usize],
 }
 pub type StaticTimer_t = xSTATIC_TIMER;
 #[doc = " Type by which queues are referenced.  For example, a call to xQueueCreate()"]
 #[doc = " returns an QueueHandle_t variable that can then be used as a parameter to"]
 #[doc = " xQueueSend(), xQueueReceive(), etc."]
-pub type QueueHandle_t = *mut ::std::os::raw::c_void;
+pub type QueueHandle_t = *mut ::core::ffi::c_void;
 #[doc = " Type by which queue sets are referenced.  For example, a call to"]
 #[doc = " xQueueCreateSet() returns an xQueueSet variable that can then be used as a"]
 #[doc = " parameter to xQueueSelectFromSet(), xQueueAddToSet(), etc."]
-pub type QueueSetHandle_t = *mut ::std::os::raw::c_void;
+pub type QueueSetHandle_t = *mut ::core::ffi::c_void;
 #[doc = " Queue sets can contain both queues and semaphores, so the"]
 #[doc = " QueueSetMemberHandle_t is defined as a type to be used where a parameter or"]
 #[doc = " return value can be either an QueueHandle_t or an SemaphoreHandle_t."]
-pub type QueueSetMemberHandle_t = *mut ::std::os::raw::c_void;
+pub type QueueSetMemberHandle_t = *mut ::core::ffi::c_void;
 extern "C" {
     #[doc = " It is preferred that the macros xQueueSend(), xQueueSendToFront() and"]
     #[doc = " xQueueSendToBack() are used in place of calling this function directly."]
@@ -15952,7 +15936,7 @@ extern "C" {
     #[doc = " \\ingroup QueueManagement"]
     pub fn xQueueGenericSend(
         xQueue: QueueHandle_t,
-        pvItemToQueue: *const ::std::os::raw::c_void,
+        pvItemToQueue: *const ::core::ffi::c_void,
         xTicksToWait: TickType_t,
         xCopyPosition: BaseType_t,
     ) -> BaseType_t;
@@ -15981,7 +15965,7 @@ extern "C" {
     #[doc = " \\ingroup QueueManagement"]
     pub fn xQueuePeekFromISR(
         xQueue: QueueHandle_t,
-        pvBuffer: *mut ::std::os::raw::c_void,
+        pvBuffer: *mut ::core::ffi::c_void,
     ) -> BaseType_t;
 }
 extern "C" {
@@ -16071,7 +16055,7 @@ extern "C" {
     #[doc = " \\ingroup QueueManagement"]
     pub fn xQueueGenericReceive(
         xQueue: QueueHandle_t,
-        pvBuffer: *mut ::std::os::raw::c_void,
+        pvBuffer: *mut ::core::ffi::c_void,
         xTicksToWait: TickType_t,
         xJustPeek: BaseType_t,
     ) -> BaseType_t;
@@ -16174,7 +16158,7 @@ extern "C" {
     #[doc = " \\ingroup QueueManagement"]
     pub fn xQueueGenericSendFromISR(
         xQueue: QueueHandle_t,
-        pvItemToQueue: *const ::std::os::raw::c_void,
+        pvItemToQueue: *const ::core::ffi::c_void,
         pxHigherPriorityTaskWoken: *mut BaseType_t,
         xCopyPosition: BaseType_t,
     ) -> BaseType_t;
@@ -16262,7 +16246,7 @@ extern "C" {
     #[doc = " \\ingroup QueueManagement"]
     pub fn xQueueReceiveFromISR(
         xQueue: QueueHandle_t,
-        pvBuffer: *mut ::std::os::raw::c_void,
+        pvBuffer: *mut ::core::ffi::c_void,
         pxHigherPriorityTaskWoken: *mut BaseType_t,
     ) -> BaseType_t;
 }
@@ -16294,7 +16278,7 @@ extern "C" {
     #[doc = " sacrifices execution speed to ensure better interrupt responsiveness."]
     pub fn xQueueAltGenericSend(
         xQueue: QueueHandle_t,
-        pvItemToQueue: *const ::std::os::raw::c_void,
+        pvItemToQueue: *const ::core::ffi::c_void,
         xTicksToWait: TickType_t,
         xCopyPosition: BaseType_t,
     ) -> BaseType_t;
@@ -16302,7 +16286,7 @@ extern "C" {
 extern "C" {
     pub fn xQueueAltGenericReceive(
         xQueue: QueueHandle_t,
-        pvBuffer: *mut ::std::os::raw::c_void,
+        pvBuffer: *mut ::core::ffi::c_void,
         xTicksToWait: TickType_t,
         xJustPeeking: BaseType_t,
     ) -> BaseType_t;
@@ -16310,28 +16294,28 @@ extern "C" {
 extern "C" {
     pub fn xQueueCRSendFromISR(
         xQueue: QueueHandle_t,
-        pvItemToQueue: *const ::std::os::raw::c_void,
+        pvItemToQueue: *const ::core::ffi::c_void,
         xCoRoutinePreviouslyWoken: BaseType_t,
     ) -> BaseType_t;
 }
 extern "C" {
     pub fn xQueueCRReceiveFromISR(
         xQueue: QueueHandle_t,
-        pvBuffer: *mut ::std::os::raw::c_void,
+        pvBuffer: *mut ::core::ffi::c_void,
         pxTaskWoken: *mut BaseType_t,
     ) -> BaseType_t;
 }
 extern "C" {
     pub fn xQueueCRSend(
         xQueue: QueueHandle_t,
-        pvItemToQueue: *const ::std::os::raw::c_void,
+        pvItemToQueue: *const ::core::ffi::c_void,
         xTicksToWait: TickType_t,
     ) -> BaseType_t;
 }
 extern "C" {
     pub fn xQueueCRReceive(
         xQueue: QueueHandle_t,
-        pvBuffer: *mut ::std::os::raw::c_void,
+        pvBuffer: *mut ::core::ffi::c_void,
         xTicksToWait: TickType_t,
     ) -> BaseType_t;
 }
@@ -16358,7 +16342,7 @@ extern "C" {
     ) -> QueueHandle_t;
 }
 extern "C" {
-    pub fn xQueueGetMutexHolder(xSemaphore: QueueHandle_t) -> *mut ::std::os::raw::c_void;
+    pub fn xQueueGetMutexHolder(xSemaphore: QueueHandle_t) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn xQueueTakeMutexRecursive(xMutex: QueueHandle_t, xTicksToWait: TickType_t) -> BaseType_t;
@@ -16534,8 +16518,8 @@ pub struct xLIST_ITEM {
     pub xItemValue: TickType_t,
     pub pxNext: *mut xLIST_ITEM,
     pub pxPrevious: *mut xLIST_ITEM,
-    pub pvOwner: *mut ::std::os::raw::c_void,
-    pub pvContainer: *mut ::std::os::raw::c_void,
+    pub pvOwner: *mut ::core::ffi::c_void,
+    pub pvContainer: *mut ::core::ffi::c_void,
 }
 pub type ListItem_t = xLIST_ITEM;
 #[repr(C)]
@@ -16576,11 +16560,11 @@ extern "C" {
 #[doc = " be used as a parameter to vTaskDelete to delete the task."]
 #[doc = ""]
 #[doc = " \\ingroup Tasks"]
-pub type TaskHandle_t = *mut ::std::os::raw::c_void;
+pub type TaskHandle_t = *mut ::core::ffi::c_void;
 #[doc = " Defines the prototype to which the application task hook function must"]
 #[doc = " conform."]
 pub type TaskHookFunction_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void) -> BaseType_t>;
+    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::core::ffi::c_void) -> BaseType_t>;
 #[doc = "< A task is querying the state of itself, so must be running."]
 pub const eTaskState_eRunning: eTaskState = 0;
 #[doc = "< The task being queried is in a read or pending ready list."]
@@ -16618,7 +16602,7 @@ pub type TimeOut_t = xTIME_OUT;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct xMEMORY_REGION {
-    pub pvBaseAddress: *mut ::std::os::raw::c_void,
+    pub pvBaseAddress: *mut ::core::ffi::c_void,
     pub ulLengthInBytes: u32,
     pub ulParameters: u32,
 }
@@ -16630,7 +16614,7 @@ pub struct xTASK_PARAMETERS {
     pub pvTaskCode: TaskFunction_t,
     pub pcName: *const ::std::os::raw::c_char,
     pub usStackDepth: u32,
-    pub pvParameters: *mut ::std::os::raw::c_void,
+    pub pvParameters: *mut ::core::ffi::c_void,
     pub uxPriority: UBaseType_t,
     pub puxStackBuffer: *mut StackType_t,
     pub xRegions: [MemoryRegion_t; 1usize],
@@ -16666,7 +16650,7 @@ pub type TaskStatus_t = xTASK_STATUS;
 #[derive(Debug, Copy, Clone)]
 pub struct xTASK_SNAPSHOT {
     #[doc = "< Address of task control block."]
-    pub pxTCB: *mut ::std::os::raw::c_void,
+    pub pxTCB: *mut ::core::ffi::c_void,
     #[doc = "< Points to the location of the last item placed on the tasks stack."]
     pub pxTopOfStack: *mut StackType_t,
     #[doc = "< Points to the end of the stack. pxTopOfStack < pxEndOfStack, stack grows hi2lo"]
@@ -16687,7 +16671,7 @@ extern "C" {
         pvTaskCode: TaskFunction_t,
         pcName: *const ::std::os::raw::c_char,
         usStackDepth: u32,
-        pvParameters: *mut ::std::os::raw::c_void,
+        pvParameters: *mut ::core::ffi::c_void,
         uxPriority: UBaseType_t,
         pvCreatedTask: *mut TaskHandle_t,
         xCoreID: BaseType_t,
@@ -17364,7 +17348,7 @@ extern "C" {
     pub fn vTaskSetThreadLocalStoragePointer(
         xTaskToSet: TaskHandle_t,
         xIndex: BaseType_t,
-        pvValue: *mut ::std::os::raw::c_void,
+        pvValue: *mut ::core::ffi::c_void,
     );
 }
 extern "C" {
@@ -17382,11 +17366,11 @@ extern "C" {
     pub fn pvTaskGetThreadLocalStoragePointer(
         xTaskToQuery: TaskHandle_t,
         xIndex: BaseType_t,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 #[doc = " Prototype of local storage pointer deletion callback."]
 pub type TlsDeleteCallbackFunction_t = ::core::option::Option<
-    unsafe extern "C" fn(arg1: ::std::os::raw::c_int, arg2: *mut ::std::os::raw::c_void),
+    unsafe extern "C" fn(arg1: ::std::os::raw::c_int, arg2: *mut ::core::ffi::c_void),
 >;
 extern "C" {
     #[doc = " Set local storage pointer and deletion callback."]
@@ -17413,7 +17397,7 @@ extern "C" {
     pub fn vTaskSetThreadLocalStoragePointerAndDelCallback(
         xTaskToSet: TaskHandle_t,
         xIndex: BaseType_t,
-        pvValue: *mut ::std::os::raw::c_void,
+        pvValue: *mut ::core::ffi::c_void,
         pvDelCallback: TlsDeleteCallbackFunction_t,
     );
 }
@@ -17427,7 +17411,7 @@ extern "C" {
     #[doc = " registered by the user."]
     pub fn xTaskCallApplicationTaskHook(
         xTask: TaskHandle_t,
-        pvParameter: *mut ::std::os::raw::c_void,
+        pvParameter: *mut ::core::ffi::c_void,
     ) -> BaseType_t;
 }
 extern "C" {
@@ -18087,7 +18071,7 @@ extern "C" {
     pub fn eTaskConfirmSleepModeStatus() -> eSleepModeStatus;
 }
 extern "C" {
-    pub fn pvTaskIncrementMutexHeldCount() -> *mut ::std::os::raw::c_void;
+    pub fn pvTaskIncrementMutexHeldCount() -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     pub fn uxTaskGetSnapshotAll(
@@ -18099,7 +18083,7 @@ extern "C" {
 #[doc = " Type by which ring buffers are referenced. For example, a call to xRingbufferCreate()"]
 #[doc = " returns a RingbufHandle_t variable that can then be used as a parameter to"]
 #[doc = " xRingbufferSend(), xRingbufferReceive(), etc."]
-pub type RingbufHandle_t = *mut ::std::os::raw::c_void;
+pub type RingbufHandle_t = *mut ::core::ffi::c_void;
 #[doc = " No-split buffers will only store an item in contiguous memory and will"]
 #[doc = " never split an item. Each item requires an 8 byte overhead for a header"]
 #[doc = " and will always internally occupy a 32-bit aligned size of space."]
@@ -18130,7 +18114,8 @@ extern "C" {
     #[doc = " @note    xBufferSize of no-split/allow-split buffers will be rounded up to the nearest 32-bit aligned size."]
     #[doc = ""]
     #[doc = " @return  A handle to the created ring buffer, or NULL in case of error."]
-    pub fn xRingbufferCreate(xBufferSize: usize, xBufferType: RingbufferType_t) -> RingbufHandle_t;
+    pub fn xRingbufferCreate(xBufferSize: size_t, xBufferType: RingbufferType_t)
+        -> RingbufHandle_t;
 }
 extern "C" {
     #[doc = " @brief Create a ring buffer of type RINGBUF_TYPE_NOSPLIT for a fixed item_size"]
@@ -18142,7 +18127,7 @@ extern "C" {
     #[doc = " @param[in]   xItemNum    Maximum number of items the buffer needs to hold simultaneously"]
     #[doc = ""]
     #[doc = " @return  A RingbufHandle_t handle to the created ring buffer, or NULL in case of error."]
-    pub fn xRingbufferCreateNoSplit(xItemSize: usize, xItemNum: usize) -> RingbufHandle_t;
+    pub fn xRingbufferCreateNoSplit(xItemSize: size_t, xItemNum: size_t) -> RingbufHandle_t;
 }
 extern "C" {
     #[doc = " @brief       Insert an item into the ring buffer"]
@@ -18165,8 +18150,8 @@ extern "C" {
     #[doc = "      - pdFALSE on time-out or when the data is larger than the maximum permissible size of the buffer"]
     pub fn xRingbufferSend(
         xRingbuffer: RingbufHandle_t,
-        pvItem: *const ::std::os::raw::c_void,
-        xItemSize: usize,
+        pvItem: *const ::core::ffi::c_void,
+        xItemSize: size_t,
         xTicksToWait: TickType_t,
     ) -> BaseType_t;
 }
@@ -18191,8 +18176,8 @@ extern "C" {
     #[doc = "      - pdFALSE when the ring buffer does not have space."]
     pub fn xRingbufferSendFromISR(
         xRingbuffer: RingbufHandle_t,
-        pvItem: *const ::std::os::raw::c_void,
-        xItemSize: usize,
+        pvItem: *const ::core::ffi::c_void,
+        xItemSize: size_t,
         pxHigherPriorityTaskWoken: *mut BaseType_t,
     ) -> BaseType_t;
 }
@@ -18223,8 +18208,8 @@ extern "C" {
     #[doc = "      - pdFALSE on time-out or when the data is larger than the maximum permissible size of the buffer"]
     pub fn xRingbufferSendAcquire(
         xRingbuffer: RingbufHandle_t,
-        ppvItem: *mut *mut ::std::os::raw::c_void,
-        xItemSize: usize,
+        ppvItem: *mut *mut ::core::ffi::c_void,
+        xItemSize: size_t,
         xTicksToWait: TickType_t,
     ) -> BaseType_t;
 }
@@ -18243,7 +18228,7 @@ extern "C" {
     #[doc = "      - pdFALSE if fail for some reason."]
     pub fn xRingbufferSendComplete(
         xRingbuffer: RingbufHandle_t,
-        pvItem: *mut ::std::os::raw::c_void,
+        pvItem: *mut ::core::ffi::c_void,
     ) -> BaseType_t;
 }
 extern "C" {
@@ -18263,9 +18248,9 @@ extern "C" {
     #[doc = "      - NULL on timeout, *pxItemSize is untouched in that case."]
     pub fn xRingbufferReceive(
         xRingbuffer: RingbufHandle_t,
-        pxItemSize: *mut usize,
+        pxItemSize: *mut size_t,
         xTicksToWait: TickType_t,
-    ) -> *mut ::std::os::raw::c_void;
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief   Retrieve an item from the ring buffer in an ISR"]
@@ -18285,8 +18270,8 @@ extern "C" {
     #[doc = "      - NULL when the ring buffer is empty, *pxItemSize is untouched in that case."]
     pub fn xRingbufferReceiveFromISR(
         xRingbuffer: RingbufHandle_t,
-        pxItemSize: *mut usize,
-    ) -> *mut ::std::os::raw::c_void;
+        pxItemSize: *mut size_t,
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief   Retrieve a split item from an allow-split ring buffer"]
@@ -18311,10 +18296,10 @@ extern "C" {
     #[doc = "      - pdFALSE when no item was retrieved"]
     pub fn xRingbufferReceiveSplit(
         xRingbuffer: RingbufHandle_t,
-        ppvHeadItem: *mut *mut ::std::os::raw::c_void,
-        ppvTailItem: *mut *mut ::std::os::raw::c_void,
-        pxHeadItemSize: *mut usize,
-        pxTailItemSize: *mut usize,
+        ppvHeadItem: *mut *mut ::core::ffi::c_void,
+        ppvTailItem: *mut *mut ::core::ffi::c_void,
+        pxHeadItemSize: *mut size_t,
+        pxTailItemSize: *mut size_t,
         xTicksToWait: TickType_t,
     ) -> BaseType_t;
 }
@@ -18340,10 +18325,10 @@ extern "C" {
     #[doc = "      - pdFALSE when no item was retrieved"]
     pub fn xRingbufferReceiveSplitFromISR(
         xRingbuffer: RingbufHandle_t,
-        ppvHeadItem: *mut *mut ::std::os::raw::c_void,
-        ppvTailItem: *mut *mut ::std::os::raw::c_void,
-        pxHeadItemSize: *mut usize,
-        pxTailItemSize: *mut usize,
+        ppvHeadItem: *mut *mut ::core::ffi::c_void,
+        ppvTailItem: *mut *mut ::core::ffi::c_void,
+        pxHeadItemSize: *mut size_t,
+        pxTailItemSize: *mut size_t,
     ) -> BaseType_t;
 }
 extern "C" {
@@ -18368,10 +18353,10 @@ extern "C" {
     #[doc = "      - NULL on timeout, *pxItemSize is untouched in that case."]
     pub fn xRingbufferReceiveUpTo(
         xRingbuffer: RingbufHandle_t,
-        pxItemSize: *mut usize,
+        pxItemSize: *mut size_t,
         xTicksToWait: TickType_t,
-        xMaxSize: usize,
-    ) -> *mut ::std::os::raw::c_void;
+        xMaxSize: size_t,
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief   Retrieve bytes from a byte buffer, specifying the maximum amount of"]
@@ -18395,9 +18380,9 @@ extern "C" {
     #[doc = "      - NULL when the ring buffer is empty, *pxItemSize is untouched in that case."]
     pub fn xRingbufferReceiveUpToFromISR(
         xRingbuffer: RingbufHandle_t,
-        pxItemSize: *mut usize,
-        xMaxSize: usize,
-    ) -> *mut ::std::os::raw::c_void;
+        pxItemSize: *mut size_t,
+        xMaxSize: size_t,
+    ) -> *mut ::core::ffi::c_void;
 }
 extern "C" {
     #[doc = " @brief   Return a previously-retrieved item to the ring buffer"]
@@ -18406,7 +18391,7 @@ extern "C" {
     #[doc = " @param[in]   pvItem      Item that was received earlier"]
     #[doc = ""]
     #[doc = " @note    If a split item is retrieved, both parts should be returned by calling this function twice"]
-    pub fn vRingbufferReturnItem(xRingbuffer: RingbufHandle_t, pvItem: *mut ::std::os::raw::c_void);
+    pub fn vRingbufferReturnItem(xRingbuffer: RingbufHandle_t, pvItem: *mut ::core::ffi::c_void);
 }
 extern "C" {
     #[doc = " @brief   Return a previously-retrieved item to the ring buffer from an ISR"]
@@ -18419,7 +18404,7 @@ extern "C" {
     #[doc = " @note    If a split item is retrieved, both parts should be returned by calling this function twice"]
     pub fn vRingbufferReturnItemFromISR(
         xRingbuffer: RingbufHandle_t,
-        pvItem: *mut ::std::os::raw::c_void,
+        pvItem: *mut ::core::ffi::c_void,
         pxHigherPriorityTaskWoken: *mut BaseType_t,
     );
 }
@@ -18448,7 +18433,7 @@ extern "C" {
     #[doc = "          pointers."]
     #[doc = ""]
     #[doc = " @return  Maximum size, in bytes, of an item that can be placed in a ring buffer."]
-    pub fn xRingbufferGetMaxItemSize(xRingbuffer: RingbufHandle_t) -> usize;
+    pub fn xRingbufferGetMaxItemSize(xRingbuffer: RingbufHandle_t) -> size_t;
 }
 extern "C" {
     #[doc = " @brief   Get current free size available for an item/data in the buffer"]
@@ -18468,7 +18453,7 @@ extern "C" {
     #[doc = " @param[in]   xRingbuffer     Ring buffer to query"]
     #[doc = ""]
     #[doc = " @return  Current free size, in bytes, available for an entry"]
-    pub fn xRingbufferGetCurFreeSize(xRingbuffer: RingbufHandle_t) -> usize;
+    pub fn xRingbufferGetCurFreeSize(xRingbuffer: RingbufHandle_t) -> size_t;
 }
 extern "C" {
     #[doc = " @brief   Add the ring buffer's read semaphore to a queue set."]
@@ -18669,7 +18654,7 @@ pub struct uart_event_t {
     #[doc = "< UART event type"]
     pub type_: uart_event_type_t,
     #[doc = "< UART data size for UART_DATA event"]
-    pub size: usize,
+    pub size: size_t,
 }
 pub type uart_isr_handle_t = intr_handle_t;
 extern "C" {
@@ -18929,8 +18914,8 @@ extern "C" {
     #[doc = "     - ESP_FAIL Parameter error"]
     pub fn uart_isr_register(
         uart_num: uart_port_t,
-        fn_: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>,
-        arg: *mut ::std::os::raw::c_void,
+        fn_: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::core::ffi::c_void)>,
+        arg: *mut ::core::ffi::c_void,
         intr_alloc_flags: ::std::os::raw::c_int,
         handle: *mut uart_isr_handle_t,
     ) -> esp_err_t;
@@ -19123,7 +19108,7 @@ extern "C" {
     pub fn uart_write_bytes(
         uart_num: uart_port_t,
         src: *const ::std::os::raw::c_char,
-        size: usize,
+        size: size_t,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {
@@ -19148,7 +19133,7 @@ extern "C" {
     pub fn uart_write_bytes_with_break(
         uart_num: uart_port_t,
         src: *const ::std::os::raw::c_char,
-        size: usize,
+        size: size_t,
         brk_len: ::std::os::raw::c_int,
     ) -> ::std::os::raw::c_int;
 }
@@ -19201,7 +19186,7 @@ extern "C" {
     #[doc = " @return"]
     #[doc = "     - ESP_OK Success"]
     #[doc = "     - ESP_FAIL Parameter error"]
-    pub fn uart_get_buffered_data_len(uart_num: uart_port_t, size: *mut usize) -> esp_err_t;
+    pub fn uart_get_buffered_data_len(uart_num: uart_port_t, size: *mut size_t) -> esp_err_t;
 }
 extern "C" {
     #[doc = " @brief   UART disable pattern detect function."]
@@ -19396,7 +19381,7 @@ pub const GPIO_INT_TYPE_GPIO_PIN_INTR_LOLEVEL: GPIO_INT_TYPE = 4;
 pub const GPIO_INT_TYPE_GPIO_PIN_INTR_HILEVEL: GPIO_INT_TYPE = 5;
 pub type GPIO_INT_TYPE = u32;
 pub type gpio_intr_handler_fn_t = ::core::option::Option<
-    unsafe extern "C" fn(intr_mask: u32, high: bool, arg: *mut ::std::os::raw::c_void),
+    unsafe extern "C" fn(intr_mask: u32, high: bool, arg: *mut ::core::ffi::c_void),
 >;
 extern "C" {
     #[doc = " @brief Initialize GPIO. This includes reading the GPIO Configuration DataSet"]
@@ -19471,10 +19456,7 @@ extern "C" {
     #[doc = " @param void *arg : gpio application-specific interrupt handler argument."]
     #[doc = ""]
     #[doc = " @return None"]
-    pub fn gpio_intr_handler_register(
-        fn_: gpio_intr_handler_fn_t,
-        arg: *mut ::std::os::raw::c_void,
-    );
+    pub fn gpio_intr_handler_register(fn_: gpio_intr_handler_fn_t, arg: *mut ::core::ffi::c_void);
 }
 extern "C" {
     #[doc = " @brief Get gpio interrupts which happens but not processed."]
@@ -21033,7 +21015,7 @@ extern "C" {
     pub static mut GPIO: gpio_dev_t;
 }
 extern "C" {
-    pub static mut GPIO_PIN_MUX_REG: [u32; 40usize];
+    pub static GPIO_PIN_MUX_REG: [u32; 40usize];
 }
 #[doc = "< Use to signal not connected to S/W"]
 pub const gpio_num_t_GPIO_NUM_NC: gpio_num_t = -1;
@@ -21184,8 +21166,7 @@ pub const gpio_drive_cap_t_GPIO_DRIVE_CAP_DEFAULT: gpio_drive_cap_t = 2;
 pub const gpio_drive_cap_t_GPIO_DRIVE_CAP_3: gpio_drive_cap_t = 3;
 pub const gpio_drive_cap_t_GPIO_DRIVE_CAP_MAX: gpio_drive_cap_t = 4;
 pub type gpio_drive_cap_t = u32;
-pub type gpio_isr_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>;
+pub type gpio_isr_t = ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::core::ffi::c_void)>;
 pub type gpio_isr_handle_t = intr_handle_t;
 extern "C" {
     #[doc = " @brief GPIO common configuration"]
@@ -21349,8 +21330,8 @@ extern "C" {
     #[doc = "     - ESP_ERR_INVALID_ARG GPIO error"]
     #[doc = "     - ESP_ERR_NOT_FOUND No free interrupt found with the specified flags"]
     pub fn gpio_isr_register(
-        fn_: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void)>,
-        arg: *mut ::std::os::raw::c_void,
+        fn_: ::core::option::Option<unsafe extern "C" fn(arg1: *mut ::core::ffi::c_void)>,
+        arg: *mut ::core::ffi::c_void,
         intr_alloc_flags: ::std::os::raw::c_int,
         handle: *mut gpio_isr_handle_t,
     ) -> esp_err_t;
@@ -21441,7 +21422,7 @@ extern "C" {
     pub fn gpio_isr_handler_add(
         gpio_num: gpio_num_t,
         isr_handler: gpio_isr_t,
-        args: *mut ::std::os::raw::c_void,
+        args: *mut ::core::ffi::c_void,
     ) -> esp_err_t;
 }
 extern "C" {
@@ -21640,7 +21621,7 @@ extern "C" {
 extern "C" {
     pub fn esp_log_buffer_hex_internal(
         tag: *const ::std::os::raw::c_char,
-        buffer: *const ::std::os::raw::c_void,
+        buffer: *const ::core::ffi::c_void,
         buff_len: u16,
         level: esp_log_level_t,
     );
@@ -21648,7 +21629,7 @@ extern "C" {
 extern "C" {
     pub fn esp_log_buffer_char_internal(
         tag: *const ::std::os::raw::c_char,
-        buffer: *const ::std::os::raw::c_void,
+        buffer: *const ::core::ffi::c_void,
         buff_len: u16,
         level: esp_log_level_t,
     );
@@ -21656,7 +21637,7 @@ extern "C" {
 extern "C" {
     pub fn esp_log_buffer_hexdump_internal(
         tag: *const ::std::os::raw::c_char,
-        buffer: *const ::std::os::raw::c_void,
+        buffer: *const ::core::ffi::c_void,
         buff_len: u16,
         log_level: esp_log_level_t,
     );

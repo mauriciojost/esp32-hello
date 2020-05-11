@@ -4,7 +4,7 @@ source setenv.sh
 
 # export V=1
 make -j6 app && \
-# rustup run xtensa xargo build --release --verbose && \
+./bindgen.sh && \
 cargo xbuild --release && \
 $IDF_PATH/components/esptool_py/esptool/esptool.py \
 	--chip esp32 \
@@ -14,4 +14,3 @@ $IDF_PATH/components/esptool_py/esptool/esptool.py \
 	--flash_size "2MB" \
 	-o $TARGET_DIR/esp32-hello.bin \
 	$TARGET_DIR/esp32-hello
-    
