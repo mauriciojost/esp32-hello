@@ -2,7 +2,7 @@ This example project builds rust onto an esp32 using esp-idf v4.0
 
 Intended to use with the [rust-esp-nix](https://github.com/sdobz/rust-esp-nix) nix shell
 
-See [this blog post](#todo) for details
+See [this blog post](https://specific.solutions.limited/projects/hanging-plotter/esp-rust) for details
 
 Example usage:
 ```
