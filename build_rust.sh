@@ -6,9 +6,10 @@ set -e
 
 my_build_root=$(dirname $(readlink -e $0))/rust
 # rust-xtensa cannot be a submodule of this project, or its bootstrap fails
-if [ ! -e rust-xtensa ]
+if [ ! -e ../rust-xtensa ]
 then
     echo "### Not built rust, building..."
+    cd ..
     git clone git@github.com:mauriciojost/rust-xtensa.git
     cd rust-xtensa
     git fetch origin esp:esp # safe branch
