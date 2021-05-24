@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -e
+set -x
+set -u
+
 source setenv.sh
 
 # export V=1
