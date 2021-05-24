@@ -9,6 +9,7 @@ my_build_root=rust
 cd "$my_build_root"
 
 cd rust-xtensa
+git submodule update --init --recursive
 
 mkdir "$my_build_root/rust_build"
 ./configure --llvm-root="$my_build_root/llvm_build" --prefix="$my_build_root/rust_build"
