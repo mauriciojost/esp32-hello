@@ -4,6 +4,8 @@ set -u
 set -x 
 set -e
 
+# From http://quickhack.net/nom/blog/2019-05-14-build-rust-environment-for-esp32.html (thanks!)
+
 my_build_root=$(dirname $(readlink -e $0))/rust
 # rust-xtensa cannot be a submodule of this project, or its bootstrap fails
 if [ ! -e ../rust-xtensa ]

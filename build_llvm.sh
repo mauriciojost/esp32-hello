@@ -34,5 +34,5 @@ cat <<EOF > /tmp/test.c
  }
 EOF
 
-./bin/clang -target xtensa -fomit-frame-pointer -S  /tmp/test.c -o test.S
-xtensa-esp32-elf-as test.S
+./llvm_build/bin/clang/ -target xtensa -fomit-frame-pointer -S  /tmp/test.c -o /tmp/test.S
+xtensa-esp32-elf-as /tmp/test.S
