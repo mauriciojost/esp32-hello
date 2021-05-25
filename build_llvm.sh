@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
+set -u
+set -x 
+set -e
+
 # From http://quickhack.net/nom/blog/2019-05-14-build-rust-environment-for-esp32.html (thanks!)
 
 sudo apt-get install ninja-build
 
-export MY_BUILD_ROOT="$HOME/.xtensa"
-mkdir -p "$MY_BUILD_ROOT"
-cd "$MY_BUILD_ROOT"
+export my_build_root="$HOME/.xtensa"
+mkdir -p "$my_build_root"
+cd "$my_build_root"
 
 git clone https://github.com/espressif/llvm-xtensa.git
 git clone https://github.com/espressif/clang-xtensa.git llvm-xtensa/tools/clang
@@ -19,3 +23,16 @@ cmake ../llvm-xtensa -DLLVM_TARGETS_TO_BUILD="Xtensa;X86" -DCMAKE_BUILD_TYPE=Rel
 
 # Take a while
 cmake --build .
+
+
+echo "### Check clang is working"
+cd "$my_build_root"
+
+cat <<EOF > /tmp/test.c
+ int main() {
+   printf("Hello world\n");
+ }
+EOF
+
+./bin/clang -target xtensa -fomit-frame-pointer -S  /tmp/test.c -o test.S
+xtensa-esp32-elf-as test.S
