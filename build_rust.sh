@@ -8,7 +8,7 @@ set -e
 
 my_build_root=$(dirname $(readlink -e $0))/rust
 # rust-xtensa cannot be a submodule of this project, or its bootstrap fails
-if [ ! -e ../rust-xtensa ]
+if [ ! -e ../rust-xtensa/build/x86_64-unknown-linux-gnu/stage2/bin/ ]
 then
     echo "### Not built rust, building..."
     cd ..
