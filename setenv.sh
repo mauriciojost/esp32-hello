@@ -20,7 +20,7 @@ else
     echo "### Skipping, already downloaded"
 fi
 
-export PATH=$gcc_xtensa_dir/$gcc_xtensa_subdir/bin:$PATH
+#export PATH=$gcc_xtensa_dir/$gcc_xtensa_subdir/bin:$PATH
 export PATH=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin:$PATH
 export IDF_PATH=$(pwd)/esp-idf
 export TARGET_DIR=target/xtensa-none-elf/release
@@ -29,3 +29,5 @@ export RUST_BACKTRACE=1
 export XARGO_RUST_SRC=$custom_rustc/library # or /src for an older compiler
 export RUSTC=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/rustc
 export RUSTDOC=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/rustdoc
+
+source esp-idf/export.sh

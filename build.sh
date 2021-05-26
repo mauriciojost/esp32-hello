@@ -6,11 +6,14 @@ set -u
 
 source setenv.sh
 
+echo "### Makefile make app"
 # export V=1
 make -j6 app
 
-cargo build --release #--verbose
+echo "### Cargo build"
+cargo build --release --verbose
 
+echo "### Esptool flash"
 $IDF_PATH/components/esptool_py/esptool/esptool.py \
 	--chip esp32 \
 	elf2image \
