@@ -7,6 +7,8 @@ set -e
 # From http://quickhack.net/nom/blog/2019-05-14-build-rust-environment-for-esp32.html (thanks!)
 
 #sudo apt-get install ninja-build
+echo "Ensure nixed and venved..."
+sleep 2
 
 export my_build_root="$HOME/.xtensa"
 if [ ! -e $my_build_root ]

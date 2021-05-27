@@ -12,3 +12,4 @@ cryptography==2.1.4
 pyparsing==2.0.3
 pyelftools==0.22
 python-socketio==4.6.1
+icu==0.0.1

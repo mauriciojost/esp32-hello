@@ -28,8 +28,8 @@ export RUST_BACKTRACE=1
 export XARGO_RUST_SRC=$custom_rustc/library # or /src for an older compiler
 export RUSTC=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/rustc
 export RUSTDOC=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/rustdoc
-export PATH=$PATH:$custom_rustc/build/x86_64-unknown-linux-gnu/stage0/bin/ # cargo
-export PATH=$PATH:$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/ # rust{c,doc}
-export PATH=$PATH:$HOME/.xtensa/llvm_build/bin/ # llvm-config used by build_rust
+export PATH=$custom_rustc/build/x86_64-unknown-linux-gnu/stage0/bin/:$PATH # cargo
+export PATH=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/:$PATH # rust{c,doc}
+export PATH=$HOME/.xtensa/llvm_build/bin/:$PATH # llvm-config used by build_rust
 
 source esp-idf/export.sh
