@@ -36,6 +36,6 @@ then
     }
 EOF
 
-   ./llvm_build/bin/clang/ -target xtensa -fomit-frame-pointer -S  /tmp/test.c -o /tmp/test.S
+   ./llvm_build/bin/clang -target xtensa -fomit-frame-pointer -S  /tmp/test.c -o /tmp/test.S
    xtensa-esp32-elf-as /tmp/test.S
 fi

@@ -30,5 +30,6 @@ export RUSTC=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/rustc
 export RUSTDOC=$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/rustdoc
 export PATH=$PATH:$custom_rustc/build/x86_64-unknown-linux-gnu/stage0/bin/ # cargo
 export PATH=$PATH:$custom_rustc/build/x86_64-unknown-linux-gnu/stage2/bin/ # rust{c,doc}
+export PATH=$PATH:$HOME/.xtensa/llvm_build/bin/ # llvm-config used by build_rust
 
 source esp-idf/export.sh

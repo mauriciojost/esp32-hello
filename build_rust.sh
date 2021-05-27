@@ -20,7 +20,7 @@ then
 
     mkdir -p "$my_build_root/rust_build"
     echo "### Configuring..."
-    ./configure --experimental-targets=Xtensa --llvm-root="$my_build_root/llvm_build" --prefix="$my_build_root/rust_build"
+    ./configure --experimental-targets=Xtensa --llvm-root="$HOME/.xtensa/llvm_build" --prefix="$my_build_root/rust_build"
 
     # python 2 is required.
 

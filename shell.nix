@@ -5,7 +5,7 @@
 
 pkgs.mkShell {
   buildInputs = [
-    pkgs.ninja-build
+    pkgs.ninja
     pkgs.which
     pkgs.htop
     pkgs.zlib
