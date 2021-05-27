@@ -23,7 +23,8 @@ then
    cd llvm_build
 
    # from https://gist.github.com/MabezDev/26e175790f84f2f2b0f9bca4e63275d1
-   cmake ../llvm-xtensa -DLLVM_TARGETS_TO_BUILD="Xtensa;X86" -DCMAKE_BUILD_TYPE=Release -G "Ninja"
+   # -DLLVM_ENABLE_LIBXML2=OFF comes from error-1
+   cmake ../llvm-xtensa -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_TARGETS_TO_BUILD="Xtensa;X86" -DCMAKE_BUILD_TYPE=Release -G "Ninja"
 
    # Take a while
    cmake --build .

@@ -1,5 +1,5 @@
 
-# Error 1
+# error-1
 
 bash build_llvm.sh
 
@@ -20,4 +20,4 @@ In file included from /home/mjost/.xtensa/llvm-xtensa/utils/unittest/googlemock/
                  from /home/mjost/.xtensa/llvm-xte
 
 
-solution ==> add icu python package to virtual env
+solution ==> disable libxml in build_llvm.sh
