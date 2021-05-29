@@ -1,5 +1,7 @@
 #![no_std]
 #![no_main]
+#![feature(const_if_match)]
+#![feature(repr128)]
 
 extern crate esp32_sys;
 

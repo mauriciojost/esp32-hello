@@ -30,8 +30,8 @@ let
 
   rust-esp = pkgs.callPackage (builtins.fetchTarball {
     name = "rust-esp-nix";
-    url = "https://github.com/sdobz/rust-esp-nix/archive/791e35c4822a7bdb91a2fbf7323e64255b640bd0.tar.gz";
-    sha256 = "0qp3myqpnprf7wfxxvnxpkhs3rg1d85cd9zynrhva7clgs3axnn4";
+    url = "https://github.com/mauriciojost/rust-esp-nix/archive/5f998393e19ddc87abaf3be4faeb3a77be0e787b.tar.gz";
+    sha256 = "1zs8f7jp6spcd2rb6gi8pam4kj6yq3ci1mwyqr60pn269xnrlz5z";
   }) {};
 in
 pkgs.mkShell {
@@ -43,6 +43,7 @@ pkgs.mkShell {
       rust-esp.esp-idf
       rust-esp.esp32-toolchain
       pkgs.rustfmt
+      pkgs.which
     ];
 
     shellHook = ''
