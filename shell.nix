@@ -27,12 +27,13 @@ let
       idf-package-overlay
     ];
   };
-
-  rust-esp = pkgs.callPackage (builtins.fetchTarball {
-    name = "rust-esp-nix";
-    url = "https://github.com/sdobz/rust-esp-nix/archive/791e35c4822a7bdb91a2fbf7323e64255b640bd0.tar.gz";
-    sha256 = "0qp3myqpnprf7wfxxvnxpkhs3rg1d85cd9zynrhva7clgs3axnn4";
+  rust-esp = pkgs.callPackage(builtins.fetchGit {
+    name = "rust-esp";
+    url = "https://github.com/mauriciojost/rust-esp-nix/";
+    ref = "refs/heads/mjost-0.x";
+    rev = "f8d34579530df3440e9382bbb2a0382b7ede3538";
   }) {};
+
 in
 pkgs.mkShell {
     buildInputs = [ 
@@ -43,6 +44,7 @@ pkgs.mkShell {
       rust-esp.esp-idf
       rust-esp.esp32-toolchain
       pkgs.rustfmt
+      pkgs.which
     ];
 
     shellHook = ''
