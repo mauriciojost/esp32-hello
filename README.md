@@ -20,3 +20,7 @@ $ nix-shell shell.nix
 This flashes the bin to 0x10000 which may or may not be accurate. Can building the bootloader be added to this project?
 
 esp-idf is cloned locally. Can this be shared system wide in a sane manner? References are in .cargo/config
+
+## TODO
+
+Adapt for esp8266 once esp-idf supports esp8266 too. 
